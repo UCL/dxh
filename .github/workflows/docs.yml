@@ -1,0 +1,51 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Cache tox
+        uses: actions/cache@v3
+        with:
+          path: .tox
+          key: tox-${{hashFiles('pyproject.toml') }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: "pip"
+          cache-dependency-path: "pyproject.toml"
+      - name: Install tox
+        run: python -m pip install tox
+      - name: Build HTML documentation with tox
+        run: tox -e docs
+  publish:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Commit changes to gh-pages branch
+        run: |
+          git clone https://github.com/UCL/dxh.git --branch gh-pages --single-branch gh-pages
+          cp -r docs/_build/html/* gh-pages/
+          cd gh-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update documentation" -a || true
+          # The above command will fail if no changes were present, so we ignore
+          # the return code.
+      - name: Push changes to gh-pages branch
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          branch: gh-pages
+          directory: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}

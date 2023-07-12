@@ -176,7 +176,7 @@ deps =
 [testenv:docs]
 commands =
     sphinx-apidoc -o docs src/ -T
-    sphinx-build -b html docs docs/_build/html
+    sphinx-build -W -b html docs docs/_build/html
 deps =
     sphinx<7
     sphinx_rtd_theme
