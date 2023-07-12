@@ -21,11 +21,9 @@ def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
     Get matplotlib triangulation corresponding to dolfinx mesh.
 
     Args:
-    ----
         mesh: Finite element mesh to get triangulation for.
 
     Returns:
-    -------
         Object representing triangulation of mesh to use in Matplotlib plot functions.
     """
     if mesh.topology.dim != 2:
@@ -53,14 +51,12 @@ def project_expression_on_function_space(
     Project expression onto finite element function space.
 
     Args:
-    ----
         expression: UFL object defining expression to project or function accepting
             single argument corresponding to spatial coordinate vector defining
             expression to project.
         function_space: Finite element function space.
 
     Returns:
-    -------
         Function representing projection of expression.
     """
     if not isinstance(expression, ufl.core.expr.Expr):
@@ -83,7 +79,6 @@ def evaluate_function_at_points(
     Evaluate a finite element function at one or more points.
 
     Args:
-    ----
         function: Finite element function to evaluate.
         points: One or more points in domain of function to evaluate at. Should be
             either a one-dimensional array corresponding to a single point (with size
@@ -92,7 +87,6 @@ def evaluate_function_at_points(
             geometric dimension or 3).
 
     Returns:
-    -------
         Value(s) of function evaluated at point(s).
     """
     mesh = function.function_space.mesh
@@ -147,7 +141,6 @@ def plot_1d_functions(
     Plot one or more finite element functions on 1D domains using Matplotlib.
 
     Args:
-    ----
         functions: A single finite element function, sequence of functions or dictionary
             mapping from string labels to finite element functions, in all cases
             corresponding to the function(s) to plot. If a single function or sequence
@@ -160,8 +153,7 @@ def plot_1d_functions(
             functions on separate axes in a single column or plotting functions all on a
             single axis.
 
-    Return:
-    ------
+    Returns:
         Matplotlib figure object with plotted function(s).
     """
     label_and_functions = _preprocess_functions(functions)
@@ -219,7 +211,6 @@ def plot_2d_functions(
     height coordinate corresponding to function value.
 
     Args:
-    ----
         functions: A single finite element function, sequence of functions or dictionary
             mapping from string labels to finite element functions, in all cases
             corresponding to the function(s) to plot. If a single function or sequence
@@ -239,8 +230,7 @@ def plot_2d_functions(
         arrangement: Whether to arrange multiple axes vertically in a single
             column rather than default of horizontally in a single row.
 
-    Return:
-    ------
+    Returns:
         Matplotlib figure object with plotted function(s).
     """
     label_and_functions = _preprocess_functions(functions)
@@ -308,7 +298,6 @@ def define_dirichlet_boundary_condition(
     Define dolfinx object representing Dirichlet boundary condition.
 
     Args:
-    ----
         boundary_value: Fixed value(s) to enforce at domain boundary, either as a single
             floating point (or `Constant`) value or a finite element function object
             which gives the required values when evaluated at the boundary degrees of
@@ -324,7 +313,6 @@ def define_dirichlet_boundary_condition(
             all exterior facets.
 
     Returns:
-    -------
         Dirichlet boundary condition object.
     """
     if function_space is None and isinstance(boundary_value, Function):
