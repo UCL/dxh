@@ -18,7 +18,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "fenics-dolfinx",
+    "fenics-dolfinx>=0.6.0",
     "fenics-ufl",
     "matplotlib",
     "numpy",
