@@ -155,7 +155,7 @@ commands =
 deps =
     pytest
     pytest-cov
-conda_deps = 
+conda_deps =
     fenics-dolfinx
     fenics-ufl
     matplotlib
