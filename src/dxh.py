@@ -1,8 +1,12 @@
 """Helper functions for dolfinx."""
 
+from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Callable, Literal, Optional, Union
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from typing import Callable, Optional, Union
 
 import dolfinx
 import matplotlib.pyplot as plt
@@ -10,10 +14,12 @@ import numpy as np
 import ufl
 from dolfinx.fem import Constant, DirichletBCMetaClass, Function, FunctionSpace
 from dolfinx.fem.petsc import LinearProblem
-from dolfinx.mesh import Mesh
-from matplotlib.colors import Colormap
 from matplotlib.tri import Triangulation
-from numpy.typing import ArrayLike, NDArray
+
+if TYPE_CHECKING:
+    from dolfinx.mesh import Mesh
+    from matplotlib.colors import Colormap
+    from numpy.typing import ArrayLike, NDArray
 
 
 def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:

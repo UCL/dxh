@@ -76,7 +76,8 @@ ignore = [
     "D212", # multi-line-summary-first-line
     "D417", # argument description in docstring (unreliable)
     "PLR2004", # magic values in comparisons
-    "RET505", # superfluous else return
+    "RET505", # superfluous else return,
+    "UP007", # X | Y for type annotations (Python 3.10+ only)
 ]
 per-file-ignores = {"test_*" = [
     "D103",
