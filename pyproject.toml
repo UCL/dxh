@@ -182,7 +182,9 @@ deps =
     sphinx_rtd_theme
 
 [tox]
-env_list = test-py{39,310}
+envlist =
+    test-py39
+    test-py310
 isolated_build = true
 requires = tox-conda
 """
