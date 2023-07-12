@@ -1,7 +1,8 @@
 # DOLFINx helpers
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![Actions Status][actions-badge]][actions-link]
+[![Tests](https://github.com/UCL/dxh/actions/workflows/tests.yml/badge.svg)](https://github.com/UCL/dxh/actions/workflows/tests.yml)
+[![Linting](https://github.com/UCL/dxh/actions/workflows/linting.yml/badge.svg)](https://github.com/UCL/dxh/actions/workflows/linting.yml)
 [![Licence][licence-badge]](./LICENCE.md)
 
 <!--
@@ -11,8 +12,6 @@
 -->
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/UCL/dxh/workflows/CI/badge.svg
-[actions-link]:             https://github.com/UCL/dxh/actions
 [conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dxh
 [conda-link]:               https://github.com/conda-forge/dxh-feedstock
 [pypi-link]:                https://pypi.org/project/dxh/
