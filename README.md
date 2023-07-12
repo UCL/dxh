@@ -28,7 +28,18 @@ This project is developed in collaboration with the [Centre for Advanced Researc
 
 ### Project team
 
-Matt Graham ([matt-graham](https://github.com/matt-graham))
+Current members
+
+- Matt Graham ([matt-graham](https://github.com/matt-graham))
+- Krishnakumar Gopalakrishnan ([krishnakumarg1984](https://github.com/krishnakumarg1984))
+- Deepika Garg ([deepikagarg20](https://github.com/deepikagarg20))
+- Janosh Preuss ([janoschpreuss](https://github.com/janoschpreuss))
+- Erik Burman ([burmanerik](https://github.com/burmanerik))
+
+Former members
+
+- Anastasis Georgoulas ([ageorgou](https://github.com/ageorgou))
+- Jamie Quinn ([JamieJQuinn](https://github.com/JamieJQuinn))
 
 ### Research software engineering contact
 
