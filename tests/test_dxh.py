@@ -11,16 +11,40 @@ from mpi4py import MPI
 import dxh
 
 
+def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
+    if spatial_dimension == 1:
+        return dolfinx.mesh.create_unit_interval(MPI.COMM_WORLD, number_cells_per_axis)
+    elif spatial_dimension == 2:
+        return dolfinx.mesh.create_unit_square(
+            MPI.COMM_WORLD,
+            number_cells_per_axis,
+            number_cells_per_axis,
+        )
+    elif spatial_dimension == 3:
+        return dolfinx.mesh.create_unit_cube(
+            MPI.COMM_WORLD,
+            number_cells_per_axis,
+            number_cells_per_axis,
+            number_cells_per_axis,
+        )
+    else:
+        msg = f"Invalid spatial dimension: {spatial_dimension}"
+        raise ValueError(msg)
+
+
 @pytest.mark.parametrize("number_cells_per_axis", [5, 13, 20])
 def test_get_matplotlib_triangulation_from_mesh(number_cells_per_axis):
-    mesh = dolfinx.mesh.create_unit_square(
-        MPI.COMM_WORLD,
-        *(number_cells_per_axis,) * 2,
-    )
+    mesh = _create_unit_mesh(2, number_cells_per_axis)
     triangulation = dxh.get_matplotlib_triangulation_from_mesh(mesh)
     assert isinstance(triangulation, Triangulation)
     assert triangulation.x.shape == ((number_cells_per_axis + 1) ** 2,)
     assert triangulation.y.shape == ((number_cells_per_axis + 1) ** 2,)
+
+
+def test_get_matplotlib_triangulation_from_mesh_invalid_dimension():
+    mesh = _create_unit_mesh(1, 5)
+    with pytest.raises(ValueError, match="two-dimensional"):
+        dxh.get_matplotlib_triangulation_from_mesh(mesh)
 
 
 def _check_projected_expression(
@@ -45,27 +69,6 @@ def _check_projected_expression(
         ** 0.5
         < convergence_constant / number_cells_per_axis**convergence_order
     )
-
-
-def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
-    if spatial_dimension == 1:
-        return dolfinx.mesh.create_unit_interval(MPI.COMM_WORLD, number_cells_per_axis)
-    elif spatial_dimension == 2:
-        return dolfinx.mesh.create_unit_square(
-            MPI.COMM_WORLD,
-            number_cells_per_axis,
-            number_cells_per_axis,
-        )
-    elif spatial_dimension == 3:
-        return dolfinx.mesh.create_unit_cube(
-            MPI.COMM_WORLD,
-            number_cells_per_axis,
-            number_cells_per_axis,
-            number_cells_per_axis,
-        )
-    else:
-        msg = f"Invalid spatial dimension: {spatial_dimension}"
-        raise ValueError(msg)
 
 
 def _one_dimensional_linear(spatial_coordinate):
@@ -174,23 +177,66 @@ def test_evaluate_function_at_points(
     )
 
 
-@pytest.mark.parametrize("number_cells_per_axis", [3, 10])
-@pytest.mark.parametrize("order", [1, 2])
-@pytest.mark.parametrize("arrangement", ["vertical", "horizontal", "stacked"])
-def test_plot_1d_functions(number_cells_per_axis, order, arrangement):
-    mesh = _create_unit_mesh(1, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+@pytest.mark.parametrize(
+    "dimension_and_expression_function",
+    [
+        (1, _one_dimensional_quadratic),
+        (2, _two_dimensional_quadratic),
+        (3, _three_dimensional_quadratic),
+    ],
+)
+def test_evaluate_function_at_points_outside_domain(dimension_and_expression_function):
+    spatial_dimension, expression_function = dimension_and_expression_function
+    mesh = _create_unit_mesh(spatial_dimension, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function = dolfinx.fem.Function(function_space)
+    function.interpolate(expression_function)
+    with pytest.raises(ValueError, match="domain"):
+        dxh.evaluate_function_at_points(function, np.full(spatial_dimension, -1.0))
+
+
+def test_evaluate_function_at_points_invalid_points():
+    spatial_dimension, expression_function = 1, _one_dimensional_quadratic
+    mesh = _create_unit_mesh(spatial_dimension, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function = dolfinx.fem.Function(function_space)
+    function.interpolate(expression_function)
+    with pytest.raises(ValueError, match="points"):
+        dxh.evaluate_function_at_points(function, np.ones((1, 1, 1)))
+    with pytest.raises(ValueError, match="points"):
+        dxh.evaluate_function_at_points(function, np.ones(2))
+
+
+def _interpolate_functions(function_space, functions):
     functions_dict = {}
-    for f in (_one_dimensional_linear, _one_dimensional_quadratic):
+    for f in functions:
         function = dolfinx.fem.Function(function_space)
         function.interpolate(f)
         functions_dict[f.__name__[1:]] = function
+    return functions_dict
+
+
+@pytest.mark.parametrize("number_cells_per_axis", [3, 10])
+@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("points", [None, np.linspace(0, 1, 3)])
+@pytest.mark.parametrize("arrangement", ["vertical", "horizontal", "stacked"])
+def test_plot_1d_functions(number_cells_per_axis, points, order, arrangement):
+    mesh = _create_unit_mesh(1, number_cells_per_axis)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_one_dimensional_linear, _one_dimensional_quadratic),
+    )
     for functions_argument in (
         functions_dict,
         list(functions_dict.values()),
         next(iter(functions_dict.values())),
     ):
-        fig = dxh.plot_1d_functions(functions_argument, arrangement=arrangement)
+        fig = dxh.plot_1d_functions(
+            functions_argument,
+            points=points,
+            arrangement=arrangement,
+        )
         assert isinstance(fig, plt.Figure)
         number_functions = (
             1
@@ -200,6 +246,28 @@ def test_plot_1d_functions(number_cells_per_axis, order, arrangement):
         )
         assert len(fig.get_axes()) == number_functions
         plt.close(fig)
+
+
+def test_plot_1d_functions_invalid_arrangement():
+    mesh = _create_unit_mesh(1, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_one_dimensional_linear, _one_dimensional_quadratic),
+    )
+    with pytest.raises(ValueError, match="arrangement"):
+        dxh.plot_1d_functions(functions_dict, arrangement="invalid")
+
+
+def test_plot_1d_functions_invalid_dimension():
+    mesh = _create_unit_mesh(2, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_two_dimensional_linear, _two_dimensional_quadratic),
+    )
+    with pytest.raises(ValueError, match="dimension"):
+        dxh.plot_1d_functions(functions_dict)
 
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
@@ -223,11 +291,10 @@ def test_plot_2d_functions(
 ):
     mesh = _create_unit_mesh(2, number_cells_per_axis)
     function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
-    functions_dict = {}
-    for f in (_two_dimensional_linear, _two_dimensional_quadratic):
-        function = dolfinx.fem.Function(function_space)
-        function.interpolate(f)
-        functions_dict[f.__name__[1:]] = function
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_two_dimensional_linear, _two_dimensional_quadratic),
+    )
     for functions_argument in (
         functions_dict,
         list(functions_dict.values()),
@@ -249,3 +316,92 @@ def test_plot_2d_functions(
         ) * (2 if show_colorbar else 1)
         assert len(fig.get_axes()) == number_functions
         plt.close(fig)
+
+
+def test_plot_2d_functions_invalid_arrangement():
+    mesh = _create_unit_mesh(2, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_two_dimensional_linear, _two_dimensional_quadratic),
+    )
+    with pytest.raises(ValueError, match="arrangement"):
+        dxh.plot_2d_functions(functions_dict, arrangement="invalid")
+
+
+def test_plot_2d_functions_invalid_plot_type():
+    mesh = _create_unit_mesh(2, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_two_dimensional_linear, _two_dimensional_quadratic),
+    )
+    with pytest.raises(ValueError, match="plot_type"):
+        dxh.plot_2d_functions(functions_dict, plot_type="invalid")
+
+
+def test_plot_2d_functions_invalid_dimension():
+    mesh = _create_unit_mesh(1, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    functions_dict = _interpolate_functions(
+        function_space,
+        (_one_dimensional_linear, _one_dimensional_quadratic),
+    )
+    with pytest.raises(ValueError, match="dimension"):
+        dxh.plot_2d_functions(functions_dict)
+
+
+def _unit_mesh_boundary_indicator_function(spatial_coordinate):
+    return np.any(
+        (spatial_coordinate[..., i] == 0.0 | spatial_coordinate[..., i] == 1.0)
+        for i in range(len(spatial_coordinate))
+    )
+
+
+@pytest.mark.parametrize("number_cells_per_axis", [3, 10])
+@pytest.mark.parametrize("spatial_dimension", [1, 2, 3])
+@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("boundary_value_type", ["function", "constant", "float"])
+@pytest.mark.parametrize(
+    "boundary_indicator_function",
+    [None, _unit_mesh_boundary_indicator_function],
+)
+def test_define_dirichlet_boundary_condition(
+    number_cells_per_axis,
+    spatial_dimension,
+    order,
+    boundary_value_type,
+    boundary_indicator_function,
+):
+    mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    if boundary_value_type == "function":
+        boundary_value = dolfinx.fem.Function(function_space)
+        boundary_value.x.set(0.0)
+    elif boundary_value_type == "constant":
+        boundary_value = dolfinx.fem.Constant(mesh, 0.0)
+    elif boundary_value_type == "float":
+        boundary_value = 0.0
+    else:
+        msg = f"Unexpected boundary_value_type: {boundary_value_type}"
+        raise ValueError(msg)
+    boundary_condition = dxh.define_dirichlet_boundary_condition(
+        boundary_value,
+        boundary_indicator_function=boundary_indicator_function,
+        function_space=None if boundary_value_type == "function" else function_space,
+    )
+    assert isinstance(boundary_condition, dolfinx.fem.DirichletBCMetaClass)
+    assert boundary_condition.function_space == function_space._cpp_object
+
+
+def test_define_dirichlet_boundary_condition_missing_function_space():
+    with pytest.raises(ValueError, match="function_space"):
+        dxh.define_dirichlet_boundary_condition(0.0)
+
+
+def test_define_dirichlet_boundary_condition_function_with_function_space():
+    mesh = _create_unit_mesh(1, 5)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    boundary_value = dolfinx.fem.Function(function_space)
+    with pytest.raises(ValueError, match="function_space"):
+        dxh.define_dirichlet_boundary_condition(boundary_value, function_space)

@@ -87,7 +87,7 @@ def evaluate_function_at_points(
         function: Finite element function to evaluate.
         points: One or more points in domain of function to evaluate at. Should be
             either a one-dimensional array corresponding to a single point (with size
-            equal to the geometric dimension or 3) or a two-dimensional  array
+            equal to the geometric dimension or 3) or a two-dimensional array
             corresponding to one point per row (with size of last axis equal to the
             geometric dimension or 3).
 
@@ -176,7 +176,7 @@ def plot_1d_functions(
         n_rows, n_cols = 1, 1
         figsize = axis_size
     else:
-        msg = f"Value {arrangement} for arrangment invalid"
+        msg = f"Value {arrangement} for arrangement invalid"
         raise ValueError(msg)
     fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize)
     axes = np.atleast_1d(axes)
@@ -259,10 +259,10 @@ def plot_2d_functions(
     fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize, subplot_kw=subplot_kw)
     for ax, (label, function) in zip(np.atleast_1d(axes), label_and_functions):
         mesh = function.function_space.mesh
-        triangulation = get_matplotlib_triangulation_from_mesh(mesh)
         if mesh.topology.dim != 2:
             msg = "Only two-dimensional spatial domains are supported"
             raise ValueError(msg)
+        triangulation = get_matplotlib_triangulation_from_mesh(mesh)
         function_values = evaluate_function_at_points(function, mesh.geometry.x)
         if plot_type == "surface":
             artist = ax.plot_trisurf(
@@ -296,12 +296,13 @@ def plot_2d_functions(
     return fig
 
 
-def define_dirchlet_boundary_condition(
+def define_dirichlet_boundary_condition(
     boundary_value: Union[Function, Constant, float],
+    function_space: Optional[FunctionSpace] = None,
+    *,
     boundary_indicator_function: Optional[
         Callable[[ufl.SpatialCoordinate], bool]
     ] = None,
-    function_space: Optional[FunctionSpace] = None,
 ) -> DirichletBCMetaClass:
     """
     Define dolfinx object representing Dirichlet boundary condition.
@@ -312,14 +313,15 @@ def define_dirchlet_boundary_condition(
             floating point (or `Constant`) value or a finite element function object
             which gives the required values when evaluated at the boundary degrees of
             freedom.
+        function_space: Argument specifying finite element function space from which
+            boundary degrees of freedom should be computed. If `boundary_values` is a
+            `Function` instance then should be set to `None` (the default) as in this
+            case `boundary_values.function_space` will be used as the relevant function
+            space.
         boundary_indicator_function: If specified, a function evaluating to `True` when
             the passed spatial coordinate is on the boundary and `False` otherwise. If
             not specified (the default) then the boundary is assumed to correspond to
             all exterior facets.
-        function_space: Optional argument specifying finite element function space from
-            which boundary degrees of freedom should be computed. If `None` (default)
-            then `boundary_values.function_space` is used (which will only work if
-            `boundary_values` is a `Function` instance.
 
     Returns:
     -------
@@ -327,7 +329,10 @@ def define_dirchlet_boundary_condition(
     """
     if function_space is None and isinstance(boundary_value, Function):
         function_space = boundary_value.function_space
-    else:
+    elif function_space is not None and isinstance(boundary_value, Function):
+        msg = "function_space must be None if boundary_value is a Function"
+        raise ValueError(msg)
+    elif function_space is None:
         msg = "function_space must not be None if boundary_value is not a Function"
         raise ValueError(msg)
     mesh = function_space.mesh
@@ -339,10 +344,14 @@ def define_dirchlet_boundary_condition(
     else:
         facet_dim = mesh.topology.dim - 1
         mesh.topology.create_connectivity(facet_dim, mesh.topology.dim)
-        boundary_facets = dolfinx.fem.exterior_facet_indices(mesh.topology)
+        boundary_facets = dolfinx.mesh.exterior_facet_indices(mesh.topology)
         boundary_dofs = dolfinx.fem.locate_dofs_topological(
             function_space,
             facet_dim,
             boundary_facets,
         )
-    return dolfinx.fem.dirichletbc(boundary_value, boundary_dofs, function_space)
+    return dolfinx.fem.dirichletbc(
+        boundary_value,
+        boundary_dofs,
+        function_space if not isinstance(boundary_value, Function) else None,
+    )
