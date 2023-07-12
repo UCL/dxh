@@ -7,7 +7,7 @@ requires = [
 
 [project]
 authors = [
-    {email = "m.graham@ucl.ac.uk", name = "Matt Graham"},
+    {email = "arc-collab@ucl.ac.uk", name = "UCL Advanced Research Computing Centre Collaborations team"},
 ]
 classifiers = [
     "Operating System :: POSIX",
@@ -15,7 +15,6 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Typing :: Typed",
 ]
 dependencies = [
@@ -36,18 +35,20 @@ optional-dependencies = {dev = [
     "build",
     "mypy",
     "pre-commit",
+    "pytest",
+    "pytest-cov",
     "ruff",
     "tox",
     "twine",
 ]}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.11"
 license.file = "LICENCE.md"
 urls.homepage = "https://github.com/UCL/dxh"
 
 [tool.coverage]
 report = {skip_covered = true, sort = "cover"}
-run = {branch = true, parallel = true, source = [
+run = {branch = true, parallel = true, relative_files = true, source = [
     "dxh",
 ]}
 paths.source = [
