@@ -60,9 +60,13 @@ Compatible with Python 3.9 and 3.10. [Requires DOLFINx v0.6.0 or above to be ins
 
 ### Installation
 
-How to build or install the application.
+To install the latest development using `pip` run
 
-### Running Tests
+```sh
+pip install git+https://https://github.com/UCL/dxh.git
+```
+
+### Running tests
 
 Tests can be run across all compatible Python versions with [`tox`](https://tox.wiki/en/latest/)
 or to run tests manually in a Python environment with `pytest` installed run
@@ -72,28 +76,6 @@ pytest tests
 ```
 
 from the root of the repository.
-
-<!--
-
-## Citation
-
-Please cite [xx.yyy/zenodo.zzzz](https://doi.org/xx.yyy/zenodo.zzzzz) for this work if you use this code.
-
-<details>
-<summary>BibTEX</summary>
-
-```bibtex
-@article{xxx2023paper,
-  title={Title},
-  author={Author},
-  journal={arXiv},
-  year={2023}
-}
-```
-
-</details>
-
--->
 
 ## Acknowledgements
 
