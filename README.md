@@ -11,8 +11,8 @@
 -->
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/matt-graham/dxh/workflows/CI/badge.svg
-[actions-link]:             https://github.com/matt-graham/dxh/actions
+[actions-badge]:            https://github.com/UCL/dxh/workflows/CI/badge.svg
+[actions-link]:             https://github.com/UCL/dxh/actions
 [conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dxh
 [conda-link]:               https://github.com/conda-forge/dxh-feedstock
 [pypi-link]:                https://pypi.org/project/dxh/
@@ -27,11 +27,11 @@ This project is developed in collaboration with the [Centre for Advanced Researc
 
 ## About
 
-### Project Team
+### Project team
 
-Matt Graham ([m.graham@ucl.ac.uk](mailto:m.graham@ucl.ac.uk))
+Matt Graham ([matt-graham](https://github.com/matt-graham))
 
-### Research Software Engineering Contact
+### Research software engineering contact
 
 Centre for Advanced Research Computing, University College London
 ([arc-collab@ucl.ac.uk](mailto:arc-collab@ucl.ac.uk))
@@ -88,5 +88,3 @@ Please cite [xx.yyy/zenodo.zzzz](https://doi.org/xx.yyy/zenodo.zzzzz) for this w
 ## Acknowledgements
 
 This work was funded by a grant from the the Engineering and Physical Sciences Research Council (EPSRC).
-
-
