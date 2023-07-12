@@ -1,3 +1,5 @@
+"""Tests for DOLFINx helpers (dxh) module."""
+
 import dolfinx
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +14,8 @@ import dxh
 @pytest.mark.parametrize("number_cells_per_axis", [5, 13, 20])
 def test_get_matplotlib_triangulation_from_mesh(number_cells_per_axis):
     mesh = dolfinx.mesh.create_unit_square(
-        MPI.COMM_WORLD, *(number_cells_per_axis,) * 2
+        MPI.COMM_WORLD,
+        *(number_cells_per_axis,) * 2,
     )
     triangulation = dxh.get_matplotlib_triangulation_from_mesh(mesh)
     assert isinstance(triangulation, Triangulation)
@@ -37,7 +40,7 @@ def _check_projected_expression(
                 dxh.evaluate_function_at_points(projected_expression, mesh.geometry.x)
                 - expression_function(mesh.geometry.x.T).T
             )
-            ** 2
+            ** 2,
         )
         ** 0.5
         < convergence_constant / number_cells_per_axis**convergence_order
@@ -49,7 +52,9 @@ def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
         return dolfinx.mesh.create_unit_interval(MPI.COMM_WORLD, number_cells_per_axis)
     elif spatial_dimension == 2:
         return dolfinx.mesh.create_unit_square(
-            MPI.COMM_WORLD, number_cells_per_axis, number_cells_per_axis
+            MPI.COMM_WORLD,
+            number_cells_per_axis,
+            number_cells_per_axis,
         )
     elif spatial_dimension == 3:
         return dolfinx.mesh.create_unit_cube(
@@ -59,7 +64,8 @@ def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
             number_cells_per_axis,
         )
     else:
-        raise ValueError(f"Invalid spatial dimension: {spatial_dimension}")
+        msg = f"Invalid spatial dimension: {spatial_dimension}"
+        raise ValueError(msg)
 
 
 def _one_dimensional_linear(spatial_coordinate):
@@ -107,7 +113,9 @@ def _three_dimensional_quadratic(spatial_coordinate):
 )
 @pytest.mark.parametrize("order", [1, 2])
 def test_project_expression_on_to_function_space(
-    number_cells_per_axis, dimension_and_expression_function, order
+    number_cells_per_axis,
+    dimension_and_expression_function,
+    order,
 ):
     spatial_dimension, expression_function = dimension_and_expression_function
     if spatial_dimension == 3 and number_cells_per_axis > 30:
@@ -151,7 +159,9 @@ def test_project_expression_on_to_function_space(
 )
 @pytest.mark.parametrize("order", [1, 2])
 def test_evaluate_function_at_points(
-    number_cells_per_axis, dimension_and_expression_function, order
+    number_cells_per_axis,
+    dimension_and_expression_function,
+    order,
 ):
     spatial_dimension, expression_function = dimension_and_expression_function
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
@@ -194,21 +204,22 @@ def test_plot_1d_functions(number_cells_per_axis, order, arrangement):
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
 @pytest.mark.parametrize("order", [1, 2])
-@pytest.mark.parametrize("plot_surfaces", [True, False])
+@pytest.mark.parametrize("plot_type", ["pcolor", "surface"])
 @pytest.mark.parametrize("colormap", [None, "magma"])
 @pytest.mark.parametrize("show_colorbar", [True, False])
 @pytest.mark.parametrize(
-    "triangulation_color", [None, "white", "#fff", (1.0, 1.0, 1.0)]
+    "triangulation_color",
+    [None, "white", "#fff", (1.0, 1.0, 1.0)],
 )
-@pytest.mark.parametrize("arrange_vertically", [True, False])
+@pytest.mark.parametrize("arrangement", ["horizontal", "vertical"])
 def test_plot_2d_functions(
     number_cells_per_axis,
     order,
-    plot_surfaces,
+    plot_type,
     colormap,
     show_colorbar,
     triangulation_color,
-    arrange_vertically,
+    arrangement,
 ):
     mesh = _create_unit_mesh(2, number_cells_per_axis)
     function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
@@ -225,10 +236,10 @@ def test_plot_2d_functions(
         fig = dxh.plot_2d_functions(
             functions_argument,
             show_colorbar=show_colorbar,
-            plot_surfaces=plot_surfaces,
+            plot_type=plot_type,
             colormap=colormap,
             triangulation_color=triangulation_color,
-            arrange_vertically=arrange_vertically,
+            arrangement=arrangement,
         )
         assert isinstance(fig, plt.Figure)
         number_functions = (

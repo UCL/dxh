@@ -75,8 +75,11 @@ ignore = [
     "D203", # no-blank-line-before-class
     "D212", # multi-line-summary-first-line
     "D417", # argument description in docstring (unreliable)
+    "PLR2004", # magic values in comparisons
+    "RET505", # superfluous else return
 ]
 per-file-ignores = {"test_*" = [
+    "D103",
     "S101",
 ]}
 select = [
@@ -129,6 +132,7 @@ pep8-naming.classmethod-decorators = [
     "classmethod",
     "pydantic.validator",
 ]
+pylint.max-args = 10
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
