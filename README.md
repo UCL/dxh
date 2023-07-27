@@ -39,7 +39,7 @@ Current members
 - Matt Graham ([matt-graham](https://github.com/matt-graham))
 - Krishnakumar Gopalakrishnan ([krishnakumarg1984](https://github.com/krishnakumarg1984))
 - Deepika Garg ([deepikagarg20](https://github.com/deepikagarg20))
-- Janosh Preuss ([janoschpreuss](https://github.com/janoschpreuss))
+- Janosch Preuss ([janoschpreuss](https://github.com/janoschpreuss))
 - Erik Burman ([burmanerik](https://github.com/burmanerik))
 
 Former members
@@ -50,7 +50,7 @@ Former members
 ### Research software engineering contact
 
 Centre for Advanced Research Computing, University College London
-([arc-collab@ucl.ac.uk](mailto:arc-collab@ucl.ac.uk))
+([arc.collaborations@ucl.ac.uk](mailto:arc.collaborations@ucl.ac.uk))
 
 ## Built with
 
