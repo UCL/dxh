@@ -36,11 +36,12 @@ Documentation can be viewed at https://github-pages.ucl.ac.uk/dxh/
 
 Current members
 
-- Matt Graham ([matt-graham](https://github.com/matt-graham))
-- Krishnakumar Gopalakrishnan ([krishnakumarg1984](https://github.com/krishnakumarg1984))
-- Deepika Garg ([deepikagarg20](https://github.com/deepikagarg20))
-- Janosch Preuss ([janoschpreuss](https://github.com/janoschpreuss))
 - Erik Burman ([burmanerik](https://github.com/burmanerik))
+- Sam Cunliffe ([samcunliffe](https://github.com/samcunliffe))
+- Deepika Garg ([deepikagarg20](https://github.com/deepikagarg20))
+- Krishnakumar Gopalakrishnan ([krishnakumarg1984](https://github.com/krishnakumarg1984))
+- Matt Graham ([matt-graham](https://github.com/matt-graham))
+- Janosch Preuss ([janoschpreuss](https://github.com/janoschpreuss))
 
 Former members
 
