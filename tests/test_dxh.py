@@ -405,3 +405,59 @@ def test_define_dirichlet_boundary_condition_function_with_function_space():
     boundary_value = dolfinx.fem.Function(function_space)
     with pytest.raises(ValueError, match="function_space"):
         dxh.define_dirichlet_boundary_condition(boundary_value, function_space)
+
+
+@pytest.mark.parametrize("number_cells_per_axis", [10, 30, 100])
+@pytest.mark.parametrize(
+    "dimension_and_expression_function",
+    [
+        (1, _one_dimensional_quadratic),
+        (2, _two_dimensional_quadratic),
+        (3, _three_dimensional_quadratic),
+    ],
+)
+@pytest.mark.parametrize("degree", [1, 2])
+@pytest.mark.parametrize("degree_raise", [0, 1, 3])
+@pytest.mark.parametrize("norm_order", [1, 2, "inf"])
+def test_error_norm(
+    number_cells_per_axis,
+    dimension_and_expression_function,
+    degree,
+    degree_raise,
+    norm_order,
+):
+    spatial_dimension, expression_function = dimension_and_expression_function
+    if spatial_dimension == 3 and number_cells_per_axis > 30:
+        pytest.skip("Skipping 3D spatial domain test with fine mesh resolution")
+    mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_1 = dolfinx.fem.Function(function_space)
+    function_1.interpolate(expression_function)
+    spatial_coordinate = ufl.SpatialCoordinate(mesh)
+    expression = expression_function(spatial_coordinate)
+    for function_or_expression_2 in (expression_function, expression, function_1):
+        error = dxh.error_norm(
+            function_1,
+            function_or_expression_2,
+            degree_raise,
+            norm_order,
+        )
+        assert isinstance(error, float)
+        assert error >= 0
+        # We expect computed norms to be close to zero other than approximation error -
+        # we assume here approximation error is O(h^2) in mesh size h. This seems to
+        # apply in practice but may not be a particuarly tight bound.
+        assert error < 1.0 / number_cells_per_axis**2
+
+
+def test_error_norm_with_invalid_norm_order():
+    mesh = _create_unit_mesh(1, 3)
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function = dolfinx.fem.Function(function_space)
+    function.interpolate(_one_dimensional_linear)
+    with pytest.raises(ValueError, match="norm_order"):
+        dxh.error_norm(function, function, norm_order=-1)
+    with pytest.raises(ValueError, match="norm_order"):
+        dxh.error_norm(function, function, norm_order=3)
+    with pytest.raises(ValueError, match="norm_order"):
+        dxh.error_norm(function, function, norm_order="a")
