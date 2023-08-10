@@ -432,16 +432,16 @@ def error_norm(
     # Either construct and assemble form for norm-integral (L^1 and L^2) or compute
     # maximum across all degrees of freedom (L^infinity)
     if norm_order == 1:
+        error_form = dolfinx.fem.form(abs(interpolated_error) * ufl.dx)
+        error_local = dolfinx.fem.assemble_scalar(error_form)
+        return mesh.comm.allreduce(error_local, op=MPI.SUM)
+    elif norm_order == 2:
         error_form = dolfinx.fem.form(
             ufl.inner(interpolated_error, interpolated_error) * ufl.dx,
         )
         error_local = dolfinx.fem.assemble_scalar(error_form)
         error_global = mesh.comm.allreduce(error_local, op=MPI.SUM)
         return np.sqrt(error_global)
-    elif norm_order == 2:
-        error_form = dolfinx.fem.form(abs(interpolated_error) * ufl.dx)
-        error_local = dolfinx.fem.assemble_scalar(error_form)
-        return mesh.comm.allreduce(error_local, op=MPI.SUM)
     elif norm_order == "inf":
         error_local = np.max(abs(interpolated_error.x.array))
         return mesh.comm.allreduce(error_local, op=MPI.MAX)
