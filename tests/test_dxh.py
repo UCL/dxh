@@ -445,9 +445,8 @@ def test_error_norm(
         assert isinstance(error, float)
         assert error >= 0
         # We expect computed norms to be close to zero other than approximation error -
-        # we assume here approximation error is O(h^2) in mesh size h. This seems to
-        # apply in practice but may not be a particuarly tight bound.
-        assert error < 1.0 / number_cells_per_axis**2
+        # we assume here approximation error is O(h^(degree+1)) in mesh size h.
+        assert error < 1.0 / number_cells_per_axis ** (degree + 1)
 
 
 def test_error_norm_with_invalid_norm_order():
