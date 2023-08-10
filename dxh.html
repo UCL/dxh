@@ -1,178 +1,399 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dxh module &mdash; dxh 0.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dxh module &#8212; dxh 0.1.0 documentation</title>
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/js/theme.js"></script>
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=40769cce"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dxh';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Welcome to dxh’s documentation!" href="index.html" /> 
-</head>
+    <link rel="prev" title="Welcome to dxh’s documentation!" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
 
-          
-          
-          <a href="index.html" class="icon icon-home">
-            dxh
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">dxh module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.define_dirichlet_boundary_condition"><code class="docutils literal notranslate"><span class="pre">define_dirichlet_boundary_condition()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.evaluate_function_at_points"><code class="docutils literal notranslate"><span class="pre">evaluate_function_at_points()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.get_matplotlib_triangulation_from_mesh"><code class="docutils literal notranslate"><span class="pre">get_matplotlib_triangulation_from_mesh()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.plot_1d_functions"><code class="docutils literal notranslate"><span class="pre">plot_1d_functions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.plot_2d_functions"><code class="docutils literal notranslate"><span class="pre">plot_2d_functions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dxh.project_expression_on_function_space"><code class="docutils literal notranslate"><span class="pre">project_expression_on_function_space()</span></code></a></li>
-</ul>
-</li>
-</ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">dxh</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">dxh module</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/dxh.rst.txt" rel="nofollow"> View page source</a>
-      </li>
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">dxh 0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        dxh module
+                      </a>
+                    </li>
+                
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        dxh module
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">dxh module</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section id="module-dxh">
-<span id="dxh-module"></span><h1>dxh module<a class="headerlink" href="#module-dxh" title="Permalink to this heading"></a></h1>
-<p>Helper functions for dolfinx.</p>
+<span id="dxh-module"></span><h1>dxh module<a class="headerlink" href="#module-dxh" title="Permalink to this heading">#</a></h1>
+<p>Helper functions for DOLFINx.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.define_dirichlet_boundary_condition">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">define_dirichlet_boundary_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Function</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Constant</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FunctionSpace</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_indicator_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">ufl.SpatialCoordinate</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DirichletBCMetaClass</span></span></span><a class="reference internal" href="_modules/dxh.html#define_dirichlet_boundary_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.define_dirichlet_boundary_condition" title="Permalink to this definition"></a></dt>
-<dd><p>Define dolfinx object representing Dirichlet boundary condition.</p>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">define_dirichlet_boundary_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_indicator_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#define_dirichlet_boundary_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.define_dirichlet_boundary_condition" title="Permalink to this definition">#</a></dt>
+<dd><p>Define DOLFINx object representing Dirichlet boundary condition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>boundary_value</strong> – Fixed value(s) to enforce at domain boundary, either as a single
-floating point (or <cite>Constant</cite>) value or a finite element function object
-which gives the required values when evaluated at the boundary degrees of
-freedom.</p></li>
-<li><p><strong>function_space</strong> – Argument specifying finite element function space from which
-boundary degrees of freedom should be computed. If <cite>boundary_values</cite> is a
-<cite>Function</cite> instance then should be set to <cite>None</cite> (the default) as in this
-case <cite>boundary_values.function_space</cite> will be used as the relevant function
-space.</p></li>
-<li><p><strong>boundary_indicator_function</strong> – If specified, a function evaluating to <cite>True</cite> when
-the passed spatial coordinate is on the boundary and <cite>False</cite> otherwise. If
-not specified (the default) then the boundary is assumed to correspond to
-all exterior facets.</p></li>
+<li><p><strong>boundary_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>, <a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Constant" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constant</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]) – Fixed value(s) to enforce at domain boundary, either as a single
+floating point (or <a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Constant" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dolfinx.fem.Constant</span></code></a>) value or a finite
+element function object which gives the required values when evaluated at
+the boundary degrees of freedom.</p></li>
+<li><p><strong>function_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.FunctionSpace" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSpace</span></code></a>]) – Argument specifying finite element function space from which
+boundary degrees of freedom should be computed. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary_values</span></code>
+is a <a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dolfinx.fem.Function</span></code></a> instance then should be set to
+<code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code> (the default) as in this case
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_values.function_space</span></code> will be used as the relevant
+function space.</p></li>
+<li><p><strong>boundary_indicator_function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.html#ufl.geometry.SpatialCoordinate" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCoordinate</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]]) – If specified, a function evaluating to
+<code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code> when the passed spatial coordinate is on the boundary and
+<code class="xref py py-const docutils literal notranslate"><span class="pre">False</span></code> otherwise. If not specified (the default) then the
+boundary is assumed to correspond to all exterior facets.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dirichlet boundary condition object.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DirichletBCMetaClass</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dirichlet boundary condition object.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.evaluate_function_at_points">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">evaluate_function_at_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">np.float64</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ArrayLike</span></span></span><a class="reference internal" href="_modules/dxh.html#evaluate_function_at_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.evaluate_function_at_points" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">evaluate_function_at_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#evaluate_function_at_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.evaluate_function_at_points" title="Permalink to this definition">#</a></dt>
 <dd><p>Evaluate a finite element function at one or more points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> – Finite element function to evaluate.</p></li>
-<li><p><strong>points</strong> – One or more points in domain of function to evaluate at. Should be
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>) – Finite element function to evaluate.</p></li>
+<li><p><strong>points</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code>]]) – One or more points in domain of function to evaluate at. Should be
 either a one-dimensional array corresponding to a single point (with size
 equal to the geometric dimension or 3) or a two-dimensional array
 corresponding to one point per row (with size of last axis equal to the
 geometric dimension or 3).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Value(s) of function evaluated at point(s).</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Value(s) of function evaluated at point(s).</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.get_matplotlib_triangulation_from_mesh">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">get_matplotlib_triangulation_from_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Triangulation</span></span></span><a class="reference internal" href="_modules/dxh.html#get_matplotlib_triangulation_from_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.get_matplotlib_triangulation_from_mesh" title="Permalink to this definition"></a></dt>
-<dd><p>Get matplotlib triangulation corresponding to dolfinx mesh.</p>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">get_matplotlib_triangulation_from_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#get_matplotlib_triangulation_from_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.get_matplotlib_triangulation_from_mesh" title="Permalink to this definition">#</a></dt>
+<dd><p>Get Matplotlib triangulation corresponding to DOLFINx mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mesh</strong> – Finite element mesh to get triangulation for.</p>
+<dd class="field-odd"><p><strong>mesh</strong> (<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.mesh.html#dolfinx.mesh.Mesh" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code></a>) – Finite element mesh to get triangulation for.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Object representing triangulation of mesh to use in Matplotlib plot functions.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://matplotlib.org/stable/api/tri_api.html#matplotlib.tri.Triangulation" title="(in Matplotlib v3.7.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Triangulation</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Object representing triangulation of mesh to use in Matplotlib plot functions.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.plot_1d_functions">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">plot_1d_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Function</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Function</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Function</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">np.float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5.0,</span> <span class="pre">5.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrangement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OneDimensionalPlotArrangement</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'horizontal'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plt.Figure</span></span></span><a class="reference internal" href="_modules/dxh.html#plot_1d_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.plot_1d_functions" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">plot_1d_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5.0,</span> <span class="pre">5.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrangement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'horizontal'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#plot_1d_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.plot_1d_functions" title="Permalink to this definition">#</a></dt>
 <dd><p>Plot one or more finite element functions on 1D domains using Matplotlib.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>functions</strong> – A single finite element function, sequence of functions or dictionary
+<li><p><strong>functions</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>]]) – A single finite element function, sequence of functions or dictionary
 mapping from string labels to finite element functions, in all cases
 corresponding to the function(s) to plot. If a single function or sequence
-of functions are specified the function <cite>name</cite> attribute(s) will be used to
-set the title for each axis.</p></li>
-<li><p><strong>axis_size</strong> – Size of axis to plot each function on in inches as <cite>(width, height)</cite>
+of functions are specified the function <code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code> attribute(s) will be
+used to set the title for each axis.</p></li>
+<li><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.25)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code>]]]) – Points to evaluate and plot function at. Defaults to nodes of mesh
+function is defined on if <code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>axis_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]) – Size of axis to plot each function on in inches as <cite>(width, height)</cite>
 tuple.</p></li>
-<li><p><strong>arrangment</strong> – One of “horizontal”, “vertical” or “stacked” corresponding to
-respectively plotting functions on separate axes in a single row, plotting
-functions on separate axes in a single column or plotting functions all on a
-single axis.</p></li>
+<li><p><strong>arrangement</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'horizontal'</span></code>, <code class="docutils literal notranslate"><span class="pre">'vertical'</span></code>, <code class="docutils literal notranslate"><span class="pre">'stacked'</span></code>]) – One of <code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;horizontal&quot;</span></code>, <code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;vertical&quot;</span></code> or
+<code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;stacked&quot;</span></code> corresponding to respectively plotting functions on
+separate axes in a single row, plotting functions on separate axes in a
+single column or plotting functions all on a single axis.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Matplotlib figure object with plotted function(s).</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Matplotlib figure object with plotted function(s).</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.plot_2d_functions">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">plot_2d_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Function</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Function</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Function</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TwoDimensionalPlotType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pcolor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5.0,</span> <span class="pre">5.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Colormap</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_colorbar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangulation_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrangement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TwoDimensionalPlotArrangement</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'horizontal'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plt.Figure</span></span></span><a class="reference internal" href="_modules/dxh.html#plot_2d_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.plot_2d_functions" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">plot_2d_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pcolor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5.0,</span> <span class="pre">5.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colormap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangulation_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrangement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'horizontal'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#plot_2d_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.plot_2d_functions" title="Permalink to this definition">#</a></dt>
 <dd><p>Plot one or more finite element functions on 2D domains using Matplotlib.</p>
 <p>Can plot either pseudocolor plots (heatmaps) for each function showing variation
 in function value by color mapping or a three-dimensional surface plot with
@@ -180,47 +401,55 @@ height coordinate corresponding to function value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>functions</strong> – A single finite element function, sequence of functions or dictionary
+<li><p><strong>functions</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>]]) – A single finite element function, sequence of functions or dictionary
 mapping from string labels to finite element functions, in all cases
 corresponding to the function(s) to plot. If a single function or sequence
-of functions are specified the function <cite>name</cite> attribute(s) will be used to
-set the title for each axis.</p></li>
-<li><p><strong>plot_type</strong> – String specifying type of plot to use for each function:
-- “pcolor”: pseudo color plot with function value represented by color,
-- “surface”: surface plot with function value represented by surface height.</p></li>
-<li><p><strong>axis_size</strong> – Size of axis to plot each function on in inches as <cite>(width, height)</cite>
+of functions are specified the function <code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code> attribute(s) will be
+used to set the title for each axis.</p></li>
+<li><p><strong>plot_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'pcolor'</span></code>, <code class="docutils literal notranslate"><span class="pre">'surface'</span></code>]) – String specifying type of plot to use for each function: Either
+<code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;pcolor&quot;</span></code> for a pseudo color plot with function value represented
+by color, or <code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;surface&quot;</span></code> for a surface plot with function value
+represented by surface height.</p></li>
+<li><p><strong>axis_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]) – Size of axis to plot each function on in inches as <cite>(width, height)</cite>
 tuple.</p></li>
-<li><p><strong>colormap</strong> – Matplotlib colormap to use to plot function values (if <cite>None</cite> default
-colormap is used).</p></li>
-<li><p><strong>show_colorbar</strong> – Whether to show a colorbar key showing color mapping for function
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.7.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Colormap</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – Matplotlib colormap to use to plot function values (if
+<code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code> default colormap is used).</p></li>
+<li><p><strong>show_colorbar</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to show a colorbar key showing color mapping for function
 values.</p></li>
-<li><p><strong>triangulation_color</strong> – If not <cite>None</cite>, specifies the color (either as a string or
-RGB tuple) to use to plot the mesh triangulation as an overlay on heatmap.</p></li>
-<li><p><strong>arrangement</strong> – Whether to arrange multiple axes vertically in a single
-column rather than default of horizontally in a single row.</p></li>
+<li><p><strong>triangulation_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]) – If not <code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code>, specifies the color (either as a
+string or RGB tuple) to use to plot the mesh triangulation as an overlay on
+heatmap.</p></li>
+<li><p><strong>arrangement</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'horizontal'</span></code>, <code class="docutils literal notranslate"><span class="pre">'vertical'</span></code>]) – Whether to arrange multiple axes vertically in a single column
+rather than default of horizontally in a single row.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Matplotlib figure object with plotted function(s).</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Figure</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Matplotlib figure object with plotted function(s).</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dxh.project_expression_on_function_space">
-<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">project_expression_on_function_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ufl.core.expr.Expr</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">ufl.SpatialCoordinate</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ufl.core.expr.Expr</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ufl.FunctionSpace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Function</span></span></span><a class="reference internal" href="_modules/dxh.html#project_expression_on_function_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.project_expression_on_function_space" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">project_expression_on_function_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_space</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#project_expression_on_function_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.project_expression_on_function_space" title="Permalink to this definition">#</a></dt>
 <dd><p>Project expression onto finite element function space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>expression</strong> – UFL object defining expression to project or function accepting
+<li><p><strong>expression</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.core.html#ufl.core.expr.Expr" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expr</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.html#ufl.geometry.SpatialCoordinate" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCoordinate</span></code></a>], <a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.core.html#ufl.core.expr.Expr" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expr</span></code></a>]]) – UFL object defining expression to project or function accepting
 single argument corresponding to spatial coordinate vector defining
 expression to project.</p></li>
-<li><p><strong>function_space</strong> – Finite element function space.</p></li>
+<li><p><strong>function_space</strong> (<a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.html#ufl.functionspace.FunctionSpace" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSpace</span></code></a>) – Finite element function space.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Function representing projection of expression.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Function representing projection of expression.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,33 +457,110 @@ expression to project.</p></li>
 </section>
 
 
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to dxh’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2023, University College London.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to dxh’s documentation!</p>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    </a>
+</div></div>
+  
+</div>
 
-</body>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.define_dirichlet_boundary_condition"><code class="docutils literal notranslate"><span class="pre">define_dirichlet_boundary_condition()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.evaluate_function_at_points"><code class="docutils literal notranslate"><span class="pre">evaluate_function_at_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.get_matplotlib_triangulation_from_mesh"><code class="docutils literal notranslate"><span class="pre">get_matplotlib_triangulation_from_mesh()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.plot_1d_functions"><code class="docutils literal notranslate"><span class="pre">plot_1d_functions()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.plot_2d_functions"><code class="docutils literal notranslate"><span class="pre">plot_2d_functions()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.project_expression_on_function_space"><code class="docutils literal notranslate"><span class="pre">project_expression_on_function_space()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="_sources/dxh.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, University College London.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
 </html>
