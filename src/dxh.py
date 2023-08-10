@@ -1,4 +1,4 @@
-"""Helper functions for dolfinx."""
+"""Helper functions for DOLFINx."""
 
 from __future__ import annotations
 
@@ -19,12 +19,12 @@ from matplotlib.tri import Triangulation
 if TYPE_CHECKING:
     from dolfinx.mesh import Mesh
     from matplotlib.colors import Colormap
-    from numpy.typing import ArrayLike, NDArray
+    from numpy.typing import NDArray
 
 
 def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
     """
-    Get matplotlib triangulation corresponding to dolfinx mesh.
+    Get Matplotlib triangulation corresponding to DOLFINx mesh.
 
     Args:
         mesh: Finite element mesh to get triangulation for.
@@ -80,7 +80,7 @@ def project_expression_on_function_space(
 def evaluate_function_at_points(
     function: Function,
     points: NDArray[np.float64],
-) -> ArrayLike:
+) -> NDArray[np.float64]:
     """
     Evaluate a finite element function at one or more points.
 
@@ -133,15 +133,12 @@ def _preprocess_functions(
         return [(f.name, f) for f in functions]
 
 
-OneDimensionalPlotArrangement = Literal["horizontal", "vertical", "stacked"]
-
-
 def plot_1d_functions(
     functions: Union[Function, Sequence[Function], dict[str, Function]],
     *,
     points: Optional[NDArray[np.float64]] = None,
     axis_size: tuple[float, float] = (5.0, 5.0),
-    arrangement: OneDimensionalPlotArrangement = "horizontal",
+    arrangement: Literal["horizontal", "vertical", "stacked"] = "horizontal",
 ) -> plt.Figure:
     """
     Plot one or more finite element functions on 1D domains using Matplotlib.
@@ -150,14 +147,16 @@ def plot_1d_functions(
         functions: A single finite element function, sequence of functions or dictionary
             mapping from string labels to finite element functions, in all cases
             corresponding to the function(s) to plot. If a single function or sequence
-            of functions are specified the function `name` attribute(s) will be used to
-            set the title for each axis.
+            of functions are specified the function :py:attr:`name` attribute(s) will be
+            used to set the title for each axis.
+        points: Points to evaluate and plot function at. Defaults to nodes of mesh
+            function is defined on if :py:const:`None`.
         axis_size: Size of axis to plot each function on in inches as `(width, height)`
             tuple.
-        arrangment: One of "horizontal", "vertical" or "stacked" corresponding to
-            respectively plotting functions on separate axes in a single row, plotting
-            functions on separate axes in a single column or plotting functions all on a
-            single axis.
+        arrangement: One of :py:const:`"horizontal"`, :py:const:`"vertical"` or
+            :py:const:`"stacked"` corresponding to respectively plotting functions on
+            separate axes in a single row, plotting functions on separate axes in a
+            single column or plotting functions all on a single axis.
 
     Returns:
         Matplotlib figure object with plotted function(s).
@@ -195,19 +194,15 @@ def plot_1d_functions(
     return fig
 
 
-TwoDimensionalPlotType = Literal["pcolor", "surface"]
-TwoDimensionalPlotArrangement = Literal["horizontal", "vertical"]
-
-
 def plot_2d_functions(
     functions: Union[Function, list[Function], dict[str, Function]],
     *,
-    plot_type: TwoDimensionalPlotType = "pcolor",
+    plot_type: Literal["pcolor", "surface"] = "pcolor",
     axis_size: tuple[float, float] = (5.0, 5.0),
     colormap: Union[str, Colormap, None] = None,
     show_colorbar: bool = True,
     triangulation_color: Union[str, tuple[float, float, float], None] = None,
-    arrangement: TwoDimensionalPlotArrangement = "horizontal",
+    arrangement: Literal["horizontal", "vertical"] = "horizontal",
 ) -> plt.Figure:
     """
     Plot one or more finite element functions on 2D domains using Matplotlib.
@@ -220,21 +215,23 @@ def plot_2d_functions(
         functions: A single finite element function, sequence of functions or dictionary
             mapping from string labels to finite element functions, in all cases
             corresponding to the function(s) to plot. If a single function or sequence
-            of functions are specified the function `name` attribute(s) will be used to
-            set the title for each axis.
-        plot_type: String specifying type of plot to use for each function:
-            - "pcolor": pseudo color plot with function value represented by color,
-            - "surface": surface plot with function value represented by surface height.
+            of functions are specified the function :py:attr:`name` attribute(s) will be
+            used to set the title for each axis.
+        plot_type: String specifying type of plot to use for each function: Either
+            :py:const:`"pcolor"` for a pseudo color plot with function value represented
+            by color, or :py:const:`"surface"` for a surface plot with function value
+            represented by surface height.
         axis_size: Size of axis to plot each function on in inches as `(width, height)`
             tuple.
-        colormap: Matplotlib colormap to use to plot function values (if `None` default
-            colormap is used).
+        colormap: Matplotlib colormap to use to plot function values (if
+            :py:const:`None` default colormap is used).
         show_colorbar: Whether to show a colorbar key showing color mapping for function
             values.
-        triangulation_color: If not `None`, specifies the color (either as a string or
-            RGB tuple) to use to plot the mesh triangulation as an overlay on heatmap.
-        arrangement: Whether to arrange multiple axes vertically in a single
-            column rather than default of horizontally in a single row.
+        triangulation_color: If not :py:const:`None`, specifies the color (either as a
+            string or RGB tuple) to use to plot the mesh triangulation as an overlay on
+            heatmap.
+        arrangement: Whether to arrange multiple axes vertically in a single column
+            rather than default of horizontally in a single row.
 
     Returns:
         Matplotlib figure object with plotted function(s).
@@ -301,22 +298,23 @@ def define_dirichlet_boundary_condition(
     ] = None,
 ) -> DirichletBCMetaClass:
     """
-    Define dolfinx object representing Dirichlet boundary condition.
+    Define DOLFINx object representing Dirichlet boundary condition.
 
     Args:
         boundary_value: Fixed value(s) to enforce at domain boundary, either as a single
-            floating point (or `Constant`) value or a finite element function object
-            which gives the required values when evaluated at the boundary degrees of
-            freedom.
+            floating point (or :py:class:`dolfinx.fem.Constant`) value or a finite
+            element function object which gives the required values when evaluated at
+            the boundary degrees of freedom.
         function_space: Argument specifying finite element function space from which
-            boundary degrees of freedom should be computed. If `boundary_values` is a
-            `Function` instance then should be set to `None` (the default) as in this
-            case `boundary_values.function_space` will be used as the relevant function
-            space.
-        boundary_indicator_function: If specified, a function evaluating to `True` when
-            the passed spatial coordinate is on the boundary and `False` otherwise. If
-            not specified (the default) then the boundary is assumed to correspond to
-            all exterior facets.
+            boundary degrees of freedom should be computed. If :py:obj:`boundary_values`
+            is a :py:class:`dolfinx.fem.Function` instance then should be set to
+            :py:const:`None` (the default) as in this case
+            :py:attr:`boundary_values.function_space` will be used as the relevant
+            function space.
+        boundary_indicator_function: If specified, a function evaluating to
+            :py:const:`True` when the passed spatial coordinate is on the boundary and
+            :py:const:`False` otherwise. If not specified (the default) then the
+            boundary is assumed to correspond to all exterior facets.
 
     Returns:
         Dirichlet boundary condition object.

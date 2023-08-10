@@ -35,11 +35,12 @@ optional-dependencies = {dev = [
     "build",
     "mypy",
     "pre-commit",
+    "pydata-sphinx-theme",
     "pytest",
     "pytest-cov",
     "ruff",
     "sphinx<7",
-    "sphinx_rtd_theme",
+    "sphinx_autodoc_typehints",
     "tox",
     "twine",
 ]}
@@ -178,8 +179,9 @@ commands =
     sphinx-apidoc -o docs src/ -T
     sphinx-build -W -b html docs docs/_build/html
 deps =
-    sphinx<7
-    sphinx_rtd_theme
+    sphinx
+    pydata-sphinx-theme
+    sphinx_autodoc_typehints
 
 [tox]
 envlist =
