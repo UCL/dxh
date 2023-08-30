@@ -418,7 +418,7 @@ def test_define_dirichlet_boundary_condition_function_with_function_space():
 )
 @pytest.mark.parametrize("degree", [1, 2])
 @pytest.mark.parametrize("degree_raise", [0, 1, 3])
-@pytest.mark.parametrize("norm_order", [1, 2, "inf"])
+@pytest.mark.parametrize("norm_order", [1, 2, "inf-dof"])
 def test_error_norm(
     number_cells_per_axis,
     dimension_and_expression_function,

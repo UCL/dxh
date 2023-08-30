@@ -360,11 +360,11 @@ def error_norm(
         Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
     ],
     degree_raise: int = 3,
-    norm_order: Literal[1, 2, "inf"] = 2,
+    norm_order: Literal[1, 2, "inf-dof"] = 2,
 ) -> float:
     r"""Compute Lᵖ error norm between a function and another function or expression.
 
-    For functions :math:`f_1: \Omega \to \mathbb{R}` and
+    For scalar-valued functions :math:`f_1: \Omega \to \mathbb{R}` and
     :math:`f_2: \Omega \to \mathbb{R}` the :math:`L^p` error norm is defined for
     :math:`1 \leq p \leq \infty` as
 
@@ -384,6 +384,12 @@ def error_norm(
     degrees of freedom arrays of the interpolated functions, this giving more
     numerically robust error norm estimates compared to a more direct implementation.
 
+    For the :math:`p = \infty` case the implementation here approximates the norm by
+    computing the maximum difference across the _degrees of freedom_ (DOF) of the
+    (interpolated) functions. This will only directly approximate the :math:`L^\infty`
+    norm as defined above for finite element functions defined on elements for which the
+    DOF all correspond to pointwise evaluations of the function.
+
     Adapted from the example code by Jørgen S. Dokken at
     https://jsdokken.com/dolfinx-tutorial/chapter4/convergence.html which is
     distributed under the terms of the Creative Commons Attribution 4.0 International
@@ -399,7 +405,8 @@ def error_norm(
             degree of finite element space for interpolating functions in to.
         norm_order: Order :math:`p` of norm to compute. Currently only :math:`p = 1`,
             :math:`p = 2` and :math:`p = \infty` are supported (:math:`p = \infty`
-            is specified by passing a string :py:const:`"inf"`).
+            is specified by passing a string :py:const:`"inf-dof"` - see note above
+            with regards to definition).
 
     Returns:
         Computed Lᵖ error norm value.
@@ -430,7 +437,7 @@ def error_norm(
         interpolated_function_1.x.array - interpolated_function_2.x.array
     )
     # Either construct and assemble form for norm-integral (L^1 and L^2) or compute
-    # maximum across all degrees of freedom (L^infinity)
+    # maximum across all degrees of freedom (~ L^infinity)
     if norm_order == 1:
         error_form = dolfinx.fem.form(abs(interpolated_error) * ufl.dx)
         error_local = dolfinx.fem.assemble_scalar(error_form)
@@ -442,9 +449,9 @@ def error_norm(
         error_local = dolfinx.fem.assemble_scalar(error_form)
         error_global = mesh.comm.allreduce(error_local, op=MPI.SUM)
         return np.sqrt(error_global)
-    elif norm_order == "inf":
+    elif norm_order == "inf-dof":
         error_local = np.max(abs(interpolated_error.x.array))
         return mesh.comm.allreduce(error_local, op=MPI.MAX)
     else:
-        msg = "norm_order should be one of 1, 2, or 'inf'"
+        msg = "norm_order should be one of 1, 2, or 'inf-dof'"
         raise ValueError(msg)
