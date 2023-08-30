@@ -385,7 +385,7 @@ def error_norm(
     numerically robust error norm estimates compared to a more direct implementation.
 
     For the :math:`p = \infty` case the implementation here approximates the norm by
-    computing the maximum difference across the _degrees of freedom_ (DOF) of the
+    computing the maximum difference across the *degrees of freedom* (DOF) of the
     (interpolated) functions. This will only directly approximate the :math:`L^\infty`
     norm as defined above for finite element functions defined on elements for which the
     DOF all correspond to pointwise evaluations of the function.
