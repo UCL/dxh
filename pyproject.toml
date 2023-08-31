@@ -178,10 +178,13 @@ deps =
 commands =
     sphinx-apidoc -o docs src/ -T
     sphinx-build -W -b html docs docs/_build/html
-deps =
+conda-deps =
     sphinx
     pydata-sphinx-theme
-    sphinx_autodoc_typehints
+    sphinx-autodoc-typehints
+allowlist_external =
+    sphinx-apidoc
+    sphinx-build
 
 [tox]
 envlist =
