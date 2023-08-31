@@ -114,18 +114,18 @@ def _three_dimensional_quadratic(spatial_coordinate):
         (3, _three_dimensional_linear),
     ],
 )
-@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("degree", [1, 2])
 def test_project_expression_on_to_function_space(
     number_cells_per_axis,
     dimension_and_expression_function,
-    order,
+    degree,
 ):
     spatial_dimension, expression_function = dimension_and_expression_function
     if spatial_dimension == 3 and number_cells_per_axis > 30:
         pytest.skip("Skipping 3D spatial domain test with fine mesh resolution")
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
-    convergence_order = order + 1
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    convergence_order = degree + 1
     convergence_constant = 3.0
     _check_projected_expression(
         dxh.project_expression_on_function_space(
@@ -160,15 +160,15 @@ def test_project_expression_on_to_function_space(
         (3, _three_dimensional_quadratic),
     ],
 )
-@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("degree", [1, 2])
 def test_evaluate_function_at_points(
     number_cells_per_axis,
     dimension_and_expression_function,
-    order,
+    degree,
 ):
     spatial_dimension, expression_function = dimension_and_expression_function
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     function = dolfinx.fem.Function(function_space)
     function.interpolate(expression_function)
     assert np.allclose(
@@ -217,12 +217,12 @@ def _interpolate_functions(function_space, functions):
 
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
-@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("degree", [1, 2])
 @pytest.mark.parametrize("points", [None, np.linspace(0, 1, 3)])
 @pytest.mark.parametrize("arrangement", ["vertical", "horizontal", "stacked"])
-def test_plot_1d_functions(number_cells_per_axis, points, order, arrangement):
+def test_plot_1d_functions(number_cells_per_axis, points, degree, arrangement):
     mesh = _create_unit_mesh(1, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     functions_dict = _interpolate_functions(
         function_space,
         (_one_dimensional_linear, _one_dimensional_quadratic),
@@ -271,7 +271,7 @@ def test_plot_1d_functions_invalid_dimension():
 
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
-@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("degree", [1, 2])
 @pytest.mark.parametrize("plot_type", ["pcolor", "surface"])
 @pytest.mark.parametrize("colormap", [None, "magma"])
 @pytest.mark.parametrize("show_colorbar", [True, False])
@@ -282,7 +282,7 @@ def test_plot_1d_functions_invalid_dimension():
 @pytest.mark.parametrize("arrangement", ["horizontal", "vertical"])
 def test_plot_2d_functions(
     number_cells_per_axis,
-    order,
+    degree,
     plot_type,
     colormap,
     show_colorbar,
@@ -290,7 +290,7 @@ def test_plot_2d_functions(
     arrangement,
 ):
     mesh = _create_unit_mesh(2, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     functions_dict = _interpolate_functions(
         function_space,
         (_two_dimensional_linear, _two_dimensional_quadratic),
@@ -360,7 +360,7 @@ def _unit_mesh_boundary_indicator_function(spatial_coordinate):
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
 @pytest.mark.parametrize("spatial_dimension", [1, 2, 3])
-@pytest.mark.parametrize("order", [1, 2])
+@pytest.mark.parametrize("degree", [1, 2])
 @pytest.mark.parametrize("boundary_value_type", ["function", "constant", "float"])
 @pytest.mark.parametrize(
     "boundary_indicator_function",
@@ -369,12 +369,12 @@ def _unit_mesh_boundary_indicator_function(spatial_coordinate):
 def test_define_dirichlet_boundary_condition(
     number_cells_per_axis,
     spatial_dimension,
-    order,
+    degree,
     boundary_value_type,
     boundary_indicator_function,
 ):
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", order))
+    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     if boundary_value_type == "function":
         boundary_value = dolfinx.fem.Function(function_space)
         boundary_value.x.set(0.0)
