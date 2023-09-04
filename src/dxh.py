@@ -15,6 +15,7 @@ import ufl
 from dolfinx.fem import Constant, DirichletBCMetaClass, Function, FunctionSpace
 from dolfinx.fem.petsc import LinearProblem
 from matplotlib.tri import Triangulation
+from mpi4py import MPI
 
 if TYPE_CHECKING:
     from dolfinx.mesh import Mesh
@@ -347,3 +348,108 @@ def define_dirichlet_boundary_condition(
         boundary_dofs,
         function_space if not isinstance(boundary_value, Function) else None,
     )
+
+
+def error_norm(
+    function_1: dolfinx.fem.Function,
+    function_or_expression_2: Union[
+        dolfinx.fem.Function,
+        ufl.core.expr.Expr,
+        Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
+    ],
+    degree_raise: int = 3,
+    norm_order: Literal[1, 2, "inf-dof"] = 2,
+) -> float:
+    r"""Compute Lᵖ error norm between a function and another function or expression.
+
+    For scalar-valued functions :math:`f_1: \Omega \to \mathbb{R}` and
+    :math:`f_2: \Omega \to \mathbb{R}` the :math:`L^p` error norm is defined for
+    :math:`1 \leq p \leq \infty` as
+
+    .. math::
+
+       \Vert f_1 - f_2 \Vert_p
+       = \left( \int_{\Omega} |f_1(x) - f_2(x)|^p \, \mathrm{d}x \right)^{1/p}
+
+    and for :math:`p = \infty` as
+
+    .. math::
+
+       \Vert f_1 - f_2 \Vert_{\infty} = \sup_{x \in \Omega} |f_1(x) - f_2(x)|.
+
+    The impementation here interpolates the functions in to a higher-order finite
+    element function space and computes the difference by directly subtracting the
+    degrees of freedom arrays of the interpolated functions, this giving more
+    numerically robust error norm estimates compared to a more direct implementation.
+
+    For the :math:`p = \infty` case the implementation here approximates the norm by
+    computing the maximum difference across the *degrees of freedom* (DOF) of the
+    (interpolated) functions. This will only directly approximate the :math:`L^\infty`
+    norm as defined above for finite element functions defined on elements for which the
+    DOF all correspond to pointwise evaluations of the function.
+
+    Adapted from the example code by Jørgen S. Dokken at
+    https://jsdokken.com/dolfinx-tutorial/chapter4/convergence.html which is
+    distributed under the terms of the Creative Commons Attribution 4.0 International
+    License (http://creativecommons.org/licenses/by/4.0/).
+
+    Args:
+        function_1: Finite element function to evaluate error for.
+        function_or_expression_2: Finite element function, UFL expression in spatial
+            coordinate of a finite element mesh or callable object returning UFL
+            expression given a spatial coordinate, corresponding to function to compute
+            error difference from.
+        degree_raise: Non-negative integer specifying by increment to add to polynomial
+            degree of finite element space for interpolating functions in to.
+        norm_order: Order :math:`p` of norm to compute. Currently only :math:`p = 1`,
+            :math:`p = 2` and :math:`p = \infty` are supported (:math:`p = \infty`
+            is specified by passing a string :py:const:`"inf-dof"` - see note above
+            with regards to definition).
+
+    Returns:
+        Computed Lᵖ error norm value.
+    """
+    # Create raised degree function space with same element as for original function_1
+    original_degree = function_1.function_space.ufl_element().degree()
+    family = function_1.function_space.ufl_element().family()
+    mesh = function_1.function_space.mesh
+    raised_degree_function_space = FunctionSpace(
+        mesh,
+        (family, original_degree + degree_raise),
+    )
+    # Interpolate functions in to raised degree function space
+    interpolated_function_1 = Function(raised_degree_function_space)
+    interpolated_function_1.interpolate(function_1)
+    interpolated_function_2 = Function(raised_degree_function_space)
+    if isinstance(function_or_expression_2, ufl.core.expr.Expr):
+        expression = dolfinx.fem.Expression(
+            function_or_expression_2,
+            raised_degree_function_space.element.interpolation_points(),
+        )
+        interpolated_function_2.interpolate(expression)
+    else:
+        interpolated_function_2.interpolate(function_or_expression_2)
+    # Compute error in the raised degree function space
+    interpolated_error = Function(raised_degree_function_space)
+    interpolated_error.x.array[:] = (
+        interpolated_function_1.x.array - interpolated_function_2.x.array
+    )
+    # Either construct and assemble form for norm-integral (L^1 and L^2) or compute
+    # maximum across all degrees of freedom (~ L^infinity)
+    if norm_order == 1:
+        error_form = dolfinx.fem.form(abs(interpolated_error) * ufl.dx)
+        error_local = dolfinx.fem.assemble_scalar(error_form)
+        return mesh.comm.allreduce(error_local, op=MPI.SUM)
+    elif norm_order == 2:
+        error_form = dolfinx.fem.form(
+            ufl.inner(interpolated_error, interpolated_error) * ufl.dx,
+        )
+        error_local = dolfinx.fem.assemble_scalar(error_form)
+        error_global = mesh.comm.allreduce(error_local, op=MPI.SUM)
+        return np.sqrt(error_global)
+    elif norm_order == "inf-dof":
+        error_local = np.max(abs(interpolated_error.x.array))
+        return mesh.comm.allreduce(error_local, op=MPI.MAX)
+    else:
+        msg = "norm_order should be one of 1, 2, or 'inf-dof'"
+        raise ValueError(msg)
