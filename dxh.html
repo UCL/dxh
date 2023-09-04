@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 
 
@@ -6,7 +7,7 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>dxh module &#8212; dxh 0.1.0 documentation</title>
   
@@ -28,15 +29,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=40769cce"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'dxh';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -320,6 +322,57 @@ boundary is assumed to correspond to all exterior facets.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dxh.error_norm">
+<span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">error_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_or_expression_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree_raise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#error_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.error_norm" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute Lᵖ error norm between a function and another function or expression.</p>
+<p>For scalar-valued functions <span class="math notranslate nohighlight">\(f_1: \Omega \to \mathbb{R}\)</span> and
+<span class="math notranslate nohighlight">\(f_2: \Omega \to \mathbb{R}\)</span> the <span class="math notranslate nohighlight">\(L^p\)</span> error norm is defined for
+<span class="math notranslate nohighlight">\(1 \leq p \leq \infty\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\Vert f_1 - f_2 \Vert_p
+= \left( \int_{\Omega} |f_1(x) - f_2(x)|^p \, \mathrm{d}x \right)^{1/p}\]</div>
+<p>and for <span class="math notranslate nohighlight">\(p = \infty\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\Vert f_1 - f_2 \Vert_{\infty} = \sup_{x \in \Omega} |f_1(x) - f_2(x)|.\]</div>
+<p>The impementation here interpolates the functions in to a higher-order finite
+element function space and computes the difference by directly subtracting the
+degrees of freedom arrays of the interpolated functions, this giving more
+numerically robust error norm estimates compared to a more direct implementation.</p>
+<p>For the <span class="math notranslate nohighlight">\(p = \infty\)</span> case the implementation here approximates the norm by
+computing the maximum difference across the <em>degrees of freedom</em> (DOF) of the
+(interpolated) functions. This will only directly approximate the <span class="math notranslate nohighlight">\(L^\infty\)</span>
+norm as defined above for finite element functions defined on elements for which the
+DOF all correspond to pointwise evaluations of the function.</p>
+<p>Adapted from the example code by Jørgen S. Dokken at
+<a class="reference external" href="https://jsdokken.com/dolfinx-tutorial/chapter4/convergence.html">https://jsdokken.com/dolfinx-tutorial/chapter4/convergence.html</a> which is
+distributed under the terms of the Creative Commons Attribution 4.0 International
+License (<a class="reference external" href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_1</strong> (<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>) – Finite element function to evaluate error for.</p></li>
+<li><p><strong>function_or_expression_2</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.fenicsproject.org/dolfinx/main/python/generated/dolfinx.fem.html#dolfinx.fem.Function" title="(in DOLFINx v0.7.0.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>, <a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.core.html#ufl.core.expr.Expr" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expr</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.html#ufl.geometry.SpatialCoordinate" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCoordinate</span></code></a>], <a class="reference external" href="https://fenics.readthedocs.io/projects/ufl/en/stable/api-doc/ufl.core.html#ufl.core.expr.Expr" title="(in Unified Form Language (UFL) v2021.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expr</span></code></a>]]) – Finite element function, UFL expression in spatial
+coordinate of a finite element mesh or callable object returning UFL
+expression given a spatial coordinate, corresponding to function to compute
+error difference from.</p></li>
+<li><p><strong>degree_raise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – Non-negative integer specifying by increment to add to polynomial
+degree of finite element space for interpolating functions in to.</p></li>
+<li><p><strong>norm_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">'inf-dof'</span></code>]) – Order <span class="math notranslate nohighlight">\(p\)</span> of norm to compute. Currently only <span class="math notranslate nohighlight">\(p = 1\)</span>,
+<span class="math notranslate nohighlight">\(p = 2\)</span> and <span class="math notranslate nohighlight">\(p = \infty\)</span> are supported (<span class="math notranslate nohighlight">\(p = \infty\)</span>
+is specified by passing a string <code class="xref py py-const docutils literal notranslate"><span class="pre">&quot;inf-dof&quot;</span></code> - see note above
+with regards to definition).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Computed Lᵖ error norm value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dxh.evaluate_function_at_points">
 <span class="sig-prename descclassname"><span class="pre">dxh.</span></span><span class="sig-name descname"><span class="pre">evaluate_function_at_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dxh.html#evaluate_function_at_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dxh.evaluate_function_at_points" title="Permalink to this definition">#</a></dt>
 <dd><p>Evaluate a finite element function at one or more points.</p>
@@ -495,6 +548,7 @@ expression to project.</p></li>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.define_dirichlet_boundary_condition"><code class="docutils literal notranslate"><span class="pre">define_dirichlet_boundary_condition()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.error_norm"><code class="docutils literal notranslate"><span class="pre">error_norm()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.evaluate_function_at_points"><code class="docutils literal notranslate"><span class="pre">evaluate_function_at_points()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.get_matplotlib_triangulation_from_mesh"><code class="docutils literal notranslate"><span class="pre">get_matplotlib_triangulation_from_mesh()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dxh.plot_1d_functions"><code class="docutils literal notranslate"><span class="pre">plot_1d_functions()</span></code></a></li>
@@ -543,7 +597,7 @@ expression to project.</p></li>
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>
