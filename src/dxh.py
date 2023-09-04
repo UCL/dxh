@@ -12,8 +12,16 @@ import dolfinx
 import matplotlib.pyplot as plt
 import numpy as np
 import ufl
-from dolfinx.fem import Constant, DirichletBCMetaClass, Function, FunctionSpace
+from dolfinx.fem import Constant, Function, FunctionSpace
 from dolfinx.fem.petsc import LinearProblem
+
+try:
+    # For compatibility with dolfinx@0.6 try initially import old
+    # DirichletBCMetaClass name
+    from dolfinx.fem import DirichletBCMetaClass as DirichletBC
+except ImportError:
+    from dolfinx.fem import DirichletBC
+
 from matplotlib.tri import Triangulation
 from mpi4py import MPI
 
@@ -297,7 +305,7 @@ def define_dirichlet_boundary_condition(
     boundary_indicator_function: Optional[
         Callable[[ufl.SpatialCoordinate], bool]
     ] = None,
-) -> DirichletBCMetaClass:
+) -> DirichletBC:
     """
     Define DOLFINx object representing Dirichlet boundary condition.
 
