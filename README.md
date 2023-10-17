@@ -63,7 +63,8 @@ Centre for Advanced Research Computing, University College London
 
 ### Prerequisites
 
-Compatible with Python 3.9 and 3.10. [Requires DOLFINx v0.6.0 or above to be installed](https://github.com/FEniCS/dolfinx#installation).
+Compatible with Python 3.9 and 3.10.
+[We recommend DOLFINx v0.7.0 or above to be installed](https://github.com/FEniCS/dolfinx#installation) although we support v0.6.0 for now.
 
 ### Installation
 

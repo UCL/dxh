@@ -1,7 +1,7 @@
 """Helper functions for DOLFINx."""
 
 from __future__ import annotations
-
+import warnings
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
@@ -16,11 +16,20 @@ from dolfinx.fem import Constant, Function, FunctionSpace
 from dolfinx.fem.petsc import LinearProblem
 
 try:
-    # For compatibility with dolfinx@0.6 try initially import old
-    # DirichletBCMetaClass name
-    from dolfinx.fem import DirichletBCMetaClass as DirichletBC
-except ImportError:
     from dolfinx.fem import DirichletBC
+except ImportError:
+    # Compatibility w dolfinx@0.6: try importing old DirichletBCMetaClass name.
+    from dolfinx.fem import DirichletBCMetaClass as DirichletBC
+
+try:
+    from dolfinx.geometry import bb_tree, compute_collisions_points
+except ImportError:
+    # Compatibility w dolfinx@0.6: if the new bb_tree function is not in DOLFINx
+    # then use the class constructor directly.
+    from dolfinx.geometry import BoundingBoxTree as bb_tree
+    from dolfinx.geometry import compute_collisions as compute_collisions_points
+
+
 
 from matplotlib.tri import Triangulation
 from mpi4py import MPI
@@ -29,6 +38,10 @@ if TYPE_CHECKING:
     from dolfinx.mesh import Mesh
     from matplotlib.colors import Colormap
     from numpy.typing import NDArray
+
+if dolfinx.__version__ < "0.7.0":
+    msg = "There is a new version of DOLFINx, and we'll probably stop supporting v0.6 soon. Please update FEniCSx as soon as you can."
+    warnings.warn(msg, DeprecationWarning)
 
 
 def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
@@ -117,8 +130,13 @@ def evaluate_function_at_points(
         padded_points = np.zeros(points.shape[:-1] + (3,))
         padded_points[..., : points.shape[-1]] = points
         points = padded_points
-    tree = dolfinx.geometry.BoundingBoxTree(mesh, mesh.geometry.dim)
-    cell_candidates = dolfinx.geometry.compute_collisions(tree, points)
+    tree = bb_tree(mesh, mesh.geometry.dim)
+    cell_candidates = compute_collisions_points(tree, points)
+    # TODO: when dropping support for DOLFINx v0.6, replace the above two lines
+    # with the following for tidier namespace use.
+    #
+    # tree = dolfinx.geometry.bb_tree(mesh, mesh.geometry.dim)
+    # cell_candidates = dolfinx.geometry.compute_collisions_points(tree, points)
     if not np.all(cell_candidates.offsets[1:] > 0):
         msg = "One or more points not within domain"
         raise ValueError(msg)
