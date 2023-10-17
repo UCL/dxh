@@ -136,7 +136,7 @@ def evaluate_function_at_points(
     tree = bb_tree(mesh, mesh.geometry.dim)
     cell_candidates = compute_collisions_points(tree, points)
     # TODO: when dropping support for DOLFINx v0.6, replace the above two lines
-    # with the following for tidier namespace use.
+    # with the full namespace `dolfinx.geometry` for tidier namespace use.
     #
     if not np.all(cell_candidates.offsets[1:] > 0):
         msg = "One or more points not within domain"
