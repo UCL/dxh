@@ -363,19 +363,20 @@ def _unit_mesh_boundary_indicator_function(spatial_coordinate):
         for i in range(len(spatial_coordinate))
     )
 
+
 def _zero_vector(vector: dolfinx.la.Vector):
     """Fill the vector with zeros.
-    
+
     Accounts for the dolfinx 0.7 and 0.6 API differences.
 
-    TODO:
+    Todo:
         Remove this function and use `vector.array.fill(0.0)` directly in the
         code when dropping support for 0.6.
-    """ 
+    """
     try:
-        vector.array.fill(0.0) # dolfinx 0.7: underlying vector is numpy.ndarray.
+        vector.array.fill(0.0)  # dolfinx 0.7: underlying vector is numpy.ndarray.
     except AttributeError:
-        vector.set(0.0) # dolfinx 0.6: underlying vector is _cpp DOLFINx vector.
+        vector.set(0.0)  # dolfinx 0.6: underlying vector is _cpp DOLFINx vector.
 
 
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])

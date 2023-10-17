@@ -1,6 +1,7 @@
 """Helper functions for DOLFINx."""
 
 from __future__ import annotations
+
 import warnings
 from typing import TYPE_CHECKING, Literal
 
@@ -26,9 +27,8 @@ try:
 except ImportError:
     # Compatibility w dolfinx@0.6: if the new bb_tree function is not in DOLFINx
     # then use the class constructor directly.
-    from dolfinx.geometry import BoundingBoxTree as bb_tree
+    from dolfinx.geometry import BoundingBoxTree as bb_tree  # noqa: N813
     from dolfinx.geometry import compute_collisions as compute_collisions_points
-
 
 
 from matplotlib.tri import Triangulation
@@ -40,8 +40,11 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 if dolfinx.__version__ < "0.7.0":
-    msg = "There is a new version of DOLFINx, and we'll probably stop supporting v0.6 soon. Please update FEniCSx as soon as you can."
-    warnings.warn(msg, DeprecationWarning)
+    msg = (
+        "There is a new version of DOLFINx, and we'll stop supporting v0.6 soon. "
+        "Please update FEniCSx as soon as you can."
+    )
+    warnings.warn(msg, DeprecationWarning, stacklevel=2)
 
 
 def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
@@ -135,8 +138,6 @@ def evaluate_function_at_points(
     # TODO: when dropping support for DOLFINx v0.6, replace the above two lines
     # with the following for tidier namespace use.
     #
-    # tree = dolfinx.geometry.bb_tree(mesh, mesh.geometry.dim)
-    # cell_candidates = dolfinx.geometry.compute_collisions_points(tree, points)
     if not np.all(cell_candidates.offsets[1:] > 0):
         msg = "One or more points not within domain"
         raise ValueError(msg)
