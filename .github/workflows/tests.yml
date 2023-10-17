@@ -41,3 +41,7 @@ jobs:
           echo "tox_env=$TOX_ENV" >> "$GITHUB_ENV"
       - name: Test with tox
         run: tox -e ${{ env.tox_env }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
