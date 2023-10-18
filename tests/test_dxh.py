@@ -10,6 +10,12 @@ from mpi4py import MPI
 
 import dxh
 
+try:
+    from dolfinx.fem import DirichletBC
+except ImportError:
+    # Compatibility w dolfinx@0.6: try importing old DirichletBCMetaClass name.
+    from dolfinx.fem import DirichletBCMetaClass as DirichletBC
+
 
 def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
     if spatial_dimension == 1:
@@ -358,6 +364,21 @@ def _unit_mesh_boundary_indicator_function(spatial_coordinate):
     )
 
 
+def _zero_vector(vector: dolfinx.la.Vector):
+    """Fill the vector with zeros.
+
+    Accounts for the dolfinx 0.7 and 0.6 API differences.
+
+    Todo:
+        Remove this function and use `vector.array.fill(0.0)` directly in the
+        code when dropping support for 0.6.
+    """
+    try:
+        vector.array.fill(0.0)  # dolfinx 0.7: underlying vector is numpy.ndarray.
+    except AttributeError:
+        vector.set(0.0)  # dolfinx 0.6: underlying vector is _cpp DOLFINx vector.
+
+
 @pytest.mark.parametrize("number_cells_per_axis", [3, 10])
 @pytest.mark.parametrize("spatial_dimension", [1, 2, 3])
 @pytest.mark.parametrize("degree", [1, 2])
@@ -377,7 +398,7 @@ def test_define_dirichlet_boundary_condition(
     function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     if boundary_value_type == "function":
         boundary_value = dolfinx.fem.Function(function_space)
-        boundary_value.x.set(0.0)
+        _zero_vector(boundary_value.x)
     elif boundary_value_type == "constant":
         boundary_value = dolfinx.fem.Constant(mesh, 0.0)
     elif boundary_value_type == "float":
@@ -390,7 +411,7 @@ def test_define_dirichlet_boundary_condition(
         boundary_indicator_function=boundary_indicator_function,
         function_space=None if boundary_value_type == "function" else function_space,
     )
-    assert isinstance(boundary_condition, dolfinx.fem.DirichletBCMetaClass)
+    assert isinstance(boundary_condition, DirichletBC)
     assert boundary_condition.function_space == function_space._cpp_object
 
 
