@@ -2,6 +2,7 @@
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Tests](https://github.com/UCL/dxh/actions/workflows/tests.yml/badge.svg)](https://github.com/UCL/dxh/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/UCL/dxh/graph/badge.svg?token=z0y0mDsvIx)](https://codecov.io/gh/UCL/dxh)
 [![Linting](https://github.com/UCL/dxh/actions/workflows/linting.yml/badge.svg)](https://github.com/UCL/dxh/actions/workflows/linting.yml)
 [![Documentation](https://github.com/UCL/dxh/actions/workflows/docs.yml/badge.svg)](https://github-pages.ucl.ac.uk/dxh/)
 [![Licence][licence-badge]](./LICENCE.md)
