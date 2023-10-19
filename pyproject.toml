@@ -160,7 +160,7 @@ python =
 
 [testenv]
 conda_deps =
-    fenics-dolfinx
+    fenics-dolfinx==0.6.0,0.7
     fenics-ufl
     matplotlib
     numpy
