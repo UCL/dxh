@@ -364,7 +364,7 @@ def _unit_mesh_boundary_indicator_function(spatial_coordinate):
     )
 
 
-def _zero_vector(vector: dolfinx.la.Vector):
+def _zero_vector(vector):
     """Fill the vector with zeros.
 
     Accounts for the dolfinx 0.7 and 0.6 API differences.
