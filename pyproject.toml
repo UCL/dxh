@@ -162,6 +162,7 @@ python =
 conda_deps =
     py{39,310}-dolfinx06: fenics-dolfinx==0.6
     py{39,310}-dolfinx07: fenics-dolfinx==0.7
+    docs: fenics-dolfinx==0.7
     fenics-ufl
     matplotlib
     numpy
