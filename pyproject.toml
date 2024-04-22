@@ -164,13 +164,13 @@ python =
 
 [testenv]
 conda_deps =
-    dolfinx06: fenics-dolfinx==0.6
-    dolfinx07: fenics-dolfinx==0.7
-    docs: fenics-dolfinx==0.7
+    dolfinx06: fenics-dolfinx==0.6.*
+    dolfinx07: fenics-dolfinx==0.7.*
+    docs: fenics-dolfinx
 conda_channels =
     conda-forge
 
-[testenv:test-py{39,310}-dolfinx{06,07},test-py{311,312}-dolfinx07]
+[testenv:test-py{39,311,310,312}-dolfinx{06,07}]
 commands =
     pytest --cov --cov-report=xml
 deps =
