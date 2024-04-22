@@ -60,6 +60,9 @@ def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
     if mesh.topology.dim != 2:
         msg = "Only two-dimensional spatial domains are supported"
         raise ValueError(msg)
+    if mesh.ufl_cell().cellname() != "triangle":
+        msg = "Only meshes with triangular cells are supported"
+        raise ValueError(msg)
     # The triangulation of the mesh corresponds to the connectivity between elements of
     # dimension 2 (triangles) and elements of dimension 0 (points)
     mesh.topology.create_connectivity(2, 0)
