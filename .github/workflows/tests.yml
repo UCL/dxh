@@ -10,6 +10,7 @@ on:
 
 jobs:
   tests:
+    name: Tests with Python ${{ matrix.python-version }} and dolfinx ${{ matrix.dolfinx-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
