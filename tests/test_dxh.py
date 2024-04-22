@@ -17,21 +17,27 @@ except ImportError:
     from dolfinx.fem import DirichletBCMetaClass as DirichletBC
 
 
-def _create_unit_mesh(spatial_dimension, number_cells_per_axis):
+def _create_unit_mesh(spatial_dimension, number_cells_per_axis, cell_type=None):
     if spatial_dimension == 1:
         return dolfinx.mesh.create_unit_interval(MPI.COMM_WORLD, number_cells_per_axis)
     elif spatial_dimension == 2:
+        cell_type = dolfinx.mesh.CellType.triangle if cell_type is None else cell_type
         return dolfinx.mesh.create_unit_square(
             MPI.COMM_WORLD,
             number_cells_per_axis,
             number_cells_per_axis,
+            cell_type=cell_type,
         )
     elif spatial_dimension == 3:
+        cell_type = (
+            dolfinx.mesh.CellType.tetrahedron if cell_type is None else cell_type
+        )
         return dolfinx.mesh.create_unit_cube(
             MPI.COMM_WORLD,
             number_cells_per_axis,
             number_cells_per_axis,
             number_cells_per_axis,
+            cell_type=cell_type,
         )
     else:
         msg = f"Invalid spatial dimension: {spatial_dimension}"
@@ -50,6 +56,12 @@ def test_get_matplotlib_triangulation_from_mesh(number_cells_per_axis):
 def test_get_matplotlib_triangulation_from_mesh_invalid_dimension():
     mesh = _create_unit_mesh(1, 5)
     with pytest.raises(ValueError, match="two-dimensional"):
+        dxh.get_matplotlib_triangulation_from_mesh(mesh)
+
+
+def test_get_matplotlib_triangulation_from_mesh_invalid_cell_type():
+    mesh = _create_unit_mesh(2, 5, cell_type=dolfinx.mesh.CellType.quadrilateral)
+    with pytest.raises(ValueError, match="triangular"):
         dxh.get_matplotlib_triangulation_from_mesh(mesh)
 
 
