@@ -6,8 +6,7 @@ import warnings
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Callable, Optional, Union
+    from collections.abc import Callable, Sequence
 
 import dolfinx
 import matplotlib.pyplot as plt
@@ -75,10 +74,9 @@ def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
 
 
 def project_expression_on_function_space(
-    expression: Union[
-        ufl.core.expr.Expr,
-        Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
-    ],
+    expression: (
+        ufl.core.expr.Expr | Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr]
+    ),
     function_space: ufl.FunctionSpace,
 ) -> Function:
     """
@@ -154,7 +152,7 @@ def evaluate_function_at_points(
 
 
 def _preprocess_functions(
-    functions: Union[Function, Sequence[Function], dict[str, Function]],
+    functions: Function | Sequence[Function] | dict[str, Function],
 ) -> list[tuple[str, Function]]:
     if isinstance(functions, Function):
         return [(functions.name, functions)]
@@ -165,9 +163,9 @@ def _preprocess_functions(
 
 
 def plot_1d_functions(
-    functions: Union[Function, Sequence[Function], dict[str, Function]],
+    functions: Function | Sequence[Function] | dict[str, Function],
     *,
-    points: Optional[NDArray[np.float64]] = None,
+    points: NDArray[np.float64] | None = None,
     axis_size: tuple[float, float] = (5.0, 5.0),
     arrangement: Literal["horizontal", "vertical", "stacked"] = "horizontal",
 ) -> plt.Figure:
@@ -226,13 +224,13 @@ def plot_1d_functions(
 
 
 def plot_2d_functions(
-    functions: Union[Function, list[Function], dict[str, Function]],
+    functions: Function | list[Function] | dict[str, Function],
     *,
     plot_type: Literal["pcolor", "surface"] = "pcolor",
     axis_size: tuple[float, float] = (5.0, 5.0),
-    colormap: Union[str, Colormap, None] = None,
+    colormap: str | Colormap | None = None,
     show_colorbar: bool = True,
-    triangulation_color: Union[str, tuple[float, float, float], None] = None,
+    triangulation_color: str | tuple[float, float, float] | None = None,
     arrangement: Literal["horizontal", "vertical"] = "horizontal",
 ) -> plt.Figure:
     """
@@ -281,7 +279,11 @@ def plot_2d_functions(
         raise ValueError(msg)
     subplot_kw = {"projection": "3d"} if plot_type == "surface" else {}
     fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize, subplot_kw=subplot_kw)
-    for ax, (label, function) in zip(np.atleast_1d(axes), label_and_functions):
+    for ax, (label, function) in zip(
+        np.atleast_1d(axes),
+        label_and_functions,
+        strict=True,
+    ):
         mesh = function.function_space.mesh
         if mesh.topology.dim != 2:
             msg = "Only two-dimensional spatial domains are supported"
@@ -321,12 +323,10 @@ def plot_2d_functions(
 
 
 def define_dirichlet_boundary_condition(
-    boundary_value: Union[Function, Constant, float],
-    function_space: Optional[FunctionSpace] = None,
+    boundary_value: Function | Constant | float,
+    function_space: FunctionSpace | None = None,
     *,
-    boundary_indicator_function: Optional[
-        Callable[[ufl.SpatialCoordinate], bool]
-    ] = None,
+    boundary_indicator_function: Callable[[ufl.SpatialCoordinate], bool] | None = None,
 ) -> DirichletBC:
     """
     Define DOLFINx object representing Dirichlet boundary condition.
@@ -382,11 +382,11 @@ def define_dirichlet_boundary_condition(
 
 def error_norm(
     function_1: dolfinx.fem.Function,
-    function_or_expression_2: Union[
-        dolfinx.fem.Function,
-        ufl.core.expr.Expr,
-        Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
-    ],
+    function_or_expression_2: (
+        dolfinx.fem.Function
+        | ufl.core.expr.Expr
+        | Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr]
+    ),
     degree_raise: int = 3,
     norm_order: Literal[1, 2, "inf-dof"] = 2,
 ) -> float:
