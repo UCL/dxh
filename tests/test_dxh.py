@@ -238,7 +238,14 @@ def _interpolate_functions(function_space, functions):
 @pytest.mark.parametrize("degree", [1, 2])
 @pytest.mark.parametrize("points", [None, np.linspace(0, 1, 3)])
 @pytest.mark.parametrize("arrangement", ["vertical", "horizontal", "stacked"])
-def test_plot_1d_functions(number_cells_per_axis, points, degree, arrangement):
+@pytest.mark.parametrize("share_value_axis", [True, False])
+def test_plot_1d_functions(
+    number_cells_per_axis,
+    points,
+    degree,
+    arrangement,
+    share_value_axis,
+):
     mesh = _create_unit_mesh(1, number_cells_per_axis)
     function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
     functions_dict = _interpolate_functions(
@@ -254,6 +261,7 @@ def test_plot_1d_functions(number_cells_per_axis, points, degree, arrangement):
             functions_argument,
             points=points,
             arrangement=arrangement,
+            share_value_axis=share_value_axis,
         )
         assert isinstance(fig, plt.Figure)
         number_functions = (
@@ -298,6 +306,7 @@ def test_plot_1d_functions_invalid_dimension():
     [None, "white", "#fff", (1.0, 1.0, 1.0)],
 )
 @pytest.mark.parametrize("arrangement", ["horizontal", "vertical"])
+@pytest.mark.parametrize("share_value_axis", [True, False])
 def test_plot_2d_functions(
     number_cells_per_axis,
     degree,
@@ -306,6 +315,7 @@ def test_plot_2d_functions(
     show_colorbar,
     triangulation_color,
     arrangement,
+    share_value_axis,
 ):
     mesh = _create_unit_mesh(2, number_cells_per_axis)
     function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
@@ -325,14 +335,18 @@ def test_plot_2d_functions(
             colormap=colormap,
             triangulation_color=triangulation_color,
             arrangement=arrangement,
+            share_value_axis=share_value_axis,
         )
         assert isinstance(fig, plt.Figure)
         number_functions = (
             1
             if isinstance(functions_argument, dolfinx.fem.Function)
             else len(functions_argument)
-        ) * (2 if show_colorbar else 1)
-        assert len(fig.get_axes()) == number_functions
+        )
+        expected_number_axes = (
+            2 * number_functions if show_colorbar else number_functions
+        )
+        assert len(fig.get_axes()) == expected_number_axes
         plt.close(fig)
 
 
