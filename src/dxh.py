@@ -449,6 +449,9 @@ def error_norm(
     """
     # Create raised degree function space with same element as for original function_1
     original_degree = function_1.function_space.ufl_element().degree
+    if callable(original_degree):
+        # Depending on Basix version degree may be an accesor method or attribute
+        original_degree = original_degree()
     family = function_1.function_space.ufl_element().family_name
     mesh = function_1.function_space.mesh
     raised_degree_function_space = functionspace(
