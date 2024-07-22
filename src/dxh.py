@@ -306,7 +306,6 @@ def plot_2d_functions(
     for ax, (label, triangulation, function_values) in zip(
         np.atleast_1d(axes),
         labels_triangulations_and_function_values,
-        strict=True,
     ):
         if plot_type == "surface":
             artist = ax.plot_trisurf(
