@@ -22,6 +22,13 @@ except ImportError:
     from dolfinx.fem import DirichletBCMetaClass as DirichletBC
 
 try:
+    from dolfinx.fem import functionspace
+except ImportError:
+    # Compatibility w dolfinx@0.6: if the new functionspace function is not in DOLFINx
+    # then use the class constructor directly.
+    from dolfinx.fem import FunctionSpace as functionspace  # noqa: N813
+
+try:
     from dolfinx.geometry import bb_tree, compute_collisions_points
 except ImportError:
     # Compatibility w dolfinx@0.6: if the new bb_tree function is not in DOLFINx
@@ -359,20 +366,21 @@ def define_dirichlet_boundary_condition(
         msg = "function_space must not be None if boundary_value is not a Function"
         raise ValueError(msg)
     mesh = function_space.mesh
+    facet_dim = mesh.topology.dim - 1
     if boundary_indicator_function is not None:
-        boundary_dofs = dolfinx.fem.locate_dofs_geometrical(
-            function_space,
+        boundary_facets = dolfinx.mesh.locate_entities_boundary(
+            mesh,
+            facet_dim,
             boundary_indicator_function,
         )
     else:
-        facet_dim = mesh.topology.dim - 1
         mesh.topology.create_connectivity(facet_dim, mesh.topology.dim)
         boundary_facets = dolfinx.mesh.exterior_facet_indices(mesh.topology)
-        boundary_dofs = dolfinx.fem.locate_dofs_topological(
-            function_space,
-            facet_dim,
-            boundary_facets,
-        )
+    boundary_dofs = dolfinx.fem.locate_dofs_topological(
+        function_space,
+        facet_dim,
+        boundary_facets,
+    )
     return dolfinx.fem.dirichletbc(
         boundary_value,
         boundary_dofs,
@@ -440,10 +448,10 @@ def error_norm(
         Computed Lᵖ error norm value.
     """
     # Create raised degree function space with same element as for original function_1
-    original_degree = function_1.function_space.ufl_element().degree()
-    family = function_1.function_space.ufl_element().family()
+    original_degree = function_1.function_space.ufl_element().degree
+    family = function_1.function_space.ufl_element().family_name
     mesh = function_1.function_space.mesh
-    raised_degree_function_space = FunctionSpace(
+    raised_degree_function_space = functionspace(
         mesh,
         (family, original_degree + degree_raise),
     )

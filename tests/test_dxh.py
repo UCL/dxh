@@ -16,6 +16,13 @@ except ImportError:
     # Compatibility w dolfinx@0.6: try importing old DirichletBCMetaClass name.
     from dolfinx.fem import DirichletBCMetaClass as DirichletBC
 
+try:
+    from dolfinx.fem import functionspace
+except ImportError:
+    # Compatibility w dolfinx@0.6: if the new functionspace function is not in DOLFINx
+    # then use the class constructor directly.
+    from dolfinx.fem import FunctionSpace as functionspace  # noqa: N813
+
 
 def _create_unit_mesh(spatial_dimension, number_cells_per_axis, cell_type=None):
     if spatial_dimension == 1:
@@ -142,7 +149,7 @@ def test_project_expression_on_to_function_space(
     if spatial_dimension == 3 and number_cells_per_axis > 30:
         pytest.skip("Skipping 3D spatial domain test with fine mesh resolution")
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     convergence_order = degree + 1
     convergence_constant = 3.0
     _check_projected_expression(
@@ -186,7 +193,7 @@ def test_evaluate_function_at_points(
 ):
     spatial_dimension, expression_function = dimension_and_expression_function
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     function = dolfinx.fem.Function(function_space)
     function.interpolate(expression_function)
     assert np.allclose(
@@ -206,7 +213,7 @@ def test_evaluate_function_at_points(
 def test_evaluate_function_at_points_outside_domain(dimension_and_expression_function):
     spatial_dimension, expression_function = dimension_and_expression_function
     mesh = _create_unit_mesh(spatial_dimension, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     function = dolfinx.fem.Function(function_space)
     function.interpolate(expression_function)
     with pytest.raises(ValueError, match="domain"):
@@ -216,7 +223,7 @@ def test_evaluate_function_at_points_outside_domain(dimension_and_expression_fun
 def test_evaluate_function_at_points_invalid_points():
     spatial_dimension, expression_function = 1, _one_dimensional_quadratic
     mesh = _create_unit_mesh(spatial_dimension, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     function = dolfinx.fem.Function(function_space)
     function.interpolate(expression_function)
     with pytest.raises(ValueError, match="points"):
@@ -240,7 +247,7 @@ def _interpolate_functions(function_space, functions):
 @pytest.mark.parametrize("arrangement", ["vertical", "horizontal", "stacked"])
 def test_plot_1d_functions(number_cells_per_axis, points, degree, arrangement):
     mesh = _create_unit_mesh(1, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     functions_dict = _interpolate_functions(
         function_space,
         (_one_dimensional_linear, _one_dimensional_quadratic),
@@ -268,7 +275,7 @@ def test_plot_1d_functions(number_cells_per_axis, points, degree, arrangement):
 
 def test_plot_1d_functions_invalid_arrangement():
     mesh = _create_unit_mesh(1, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     functions_dict = _interpolate_functions(
         function_space,
         (_one_dimensional_linear, _one_dimensional_quadratic),
@@ -279,7 +286,7 @@ def test_plot_1d_functions_invalid_arrangement():
 
 def test_plot_1d_functions_invalid_dimension():
     mesh = _create_unit_mesh(2, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     functions_dict = _interpolate_functions(
         function_space,
         (_two_dimensional_linear, _two_dimensional_quadratic),
@@ -308,7 +315,7 @@ def test_plot_2d_functions(
     arrangement,
 ):
     mesh = _create_unit_mesh(2, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     functions_dict = _interpolate_functions(
         function_space,
         (_two_dimensional_linear, _two_dimensional_quadratic),
@@ -338,7 +345,7 @@ def test_plot_2d_functions(
 
 def test_plot_2d_functions_invalid_arrangement():
     mesh = _create_unit_mesh(2, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     functions_dict = _interpolate_functions(
         function_space,
         (_two_dimensional_linear, _two_dimensional_quadratic),
@@ -349,7 +356,7 @@ def test_plot_2d_functions_invalid_arrangement():
 
 def test_plot_2d_functions_invalid_plot_type():
     mesh = _create_unit_mesh(2, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     functions_dict = _interpolate_functions(
         function_space,
         (_two_dimensional_linear, _two_dimensional_quadratic),
@@ -360,7 +367,7 @@ def test_plot_2d_functions_invalid_plot_type():
 
 def test_plot_2d_functions_invalid_dimension():
     mesh = _create_unit_mesh(1, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     functions_dict = _interpolate_functions(
         function_space,
         (_one_dimensional_linear, _one_dimensional_quadratic),
@@ -370,10 +377,7 @@ def test_plot_2d_functions_invalid_dimension():
 
 
 def _unit_mesh_boundary_indicator_function(spatial_coordinate):
-    return np.any(
-        (spatial_coordinate[..., i] == 0.0 | spatial_coordinate[..., i] == 1.0)
-        for i in range(len(spatial_coordinate))
-    )
+    return ((spatial_coordinate == 0) | (spatial_coordinate == 1)).any(axis=0)
 
 
 def _zero_vector(vector):
@@ -407,7 +411,7 @@ def test_define_dirichlet_boundary_condition(
     boundary_indicator_function,
 ):
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     if boundary_value_type == "function":
         boundary_value = dolfinx.fem.Function(function_space)
         _zero_vector(boundary_value.x)
@@ -434,7 +438,7 @@ def test_define_dirichlet_boundary_condition_missing_function_space():
 
 def test_define_dirichlet_boundary_condition_function_with_function_space():
     mesh = _create_unit_mesh(1, 5)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     boundary_value = dolfinx.fem.Function(function_space)
     with pytest.raises(ValueError, match="function_space"):
         dxh.define_dirichlet_boundary_condition(boundary_value, function_space)
@@ -463,7 +467,7 @@ def test_error_norm(
     if spatial_dimension == 3 and number_cells_per_axis > 30:
         pytest.skip("Skipping 3D spatial domain test with fine mesh resolution")
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", degree))
+    function_space = functionspace(mesh, ("Lagrange", degree))
     function_1 = dolfinx.fem.Function(function_space)
     function_1.interpolate(expression_function)
     spatial_coordinate = ufl.SpatialCoordinate(mesh)
@@ -484,7 +488,7 @@ def test_error_norm(
 
 def test_error_norm_with_invalid_norm_order():
     mesh = _create_unit_mesh(1, 3)
-    function_space = dolfinx.fem.FunctionSpace(mesh, ("Lagrange", 1))
+    function_space = functionspace(mesh, ("Lagrange", 1))
     function = dolfinx.fem.Function(function_space)
     function.interpolate(_one_dimensional_linear)
     with pytest.raises(ValueError, match="norm_order"):
