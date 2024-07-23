@@ -6,8 +6,7 @@ import warnings
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Callable, Optional, Union
+    from collections.abc import Callable, Sequence
 
 import dolfinx
 import matplotlib.pyplot as plt
@@ -21,6 +20,13 @@ try:
 except ImportError:
     # Compatibility w dolfinx@0.6: try importing old DirichletBCMetaClass name.
     from dolfinx.fem import DirichletBCMetaClass as DirichletBC
+
+try:
+    from dolfinx.fem import functionspace
+except ImportError:
+    # Compatibility w dolfinx@0.6: if the new functionspace function is not in DOLFINx
+    # then use the class constructor directly.
+    from dolfinx.fem import FunctionSpace as functionspace  # noqa: N813
 
 try:
     from dolfinx.geometry import bb_tree, compute_collisions_points
@@ -76,10 +82,9 @@ def get_matplotlib_triangulation_from_mesh(mesh: Mesh) -> Triangulation:
 
 
 def project_expression_on_function_space(
-    expression: Union[
-        ufl.core.expr.Expr,
-        Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
-    ],
+    expression: (
+        ufl.core.expr.Expr | Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr]
+    ),
     function_space: ufl.FunctionSpace,
 ) -> Function:
     """
@@ -155,7 +160,7 @@ def evaluate_function_at_points(
 
 
 def _preprocess_functions(
-    functions: Union[Function, Sequence[Function], dict[str, Function]],
+    functions: Function | Sequence[Function] | dict[str, Function],
 ) -> list[tuple[str, Function]]:
     if isinstance(functions, Function):
         return [(functions.name, functions)]
@@ -166,9 +171,9 @@ def _preprocess_functions(
 
 
 def plot_1d_functions(
-    functions: Union[Function, Sequence[Function], dict[str, Function]],
+    functions: Function | Sequence[Function] | dict[str, Function],
     *,
-    points: Optional[NDArray[np.float64]] = None,
+    points: NDArray[np.float64] | None = None,
     axis_size: tuple[float, float] = (5.0, 5.0),
     arrangement: Literal["horizontal", "vertical", "stacked"] = "horizontal",
     share_value_axis: bool = False,
@@ -230,13 +235,13 @@ def plot_1d_functions(
 
 
 def plot_2d_functions(
-    functions: Union[Function, list[Function], dict[str, Function]],
+    functions: Function | list[Function] | dict[str, Function],
     *,
     plot_type: Literal["pcolor", "surface"] = "pcolor",
     axis_size: tuple[float, float] = (5.0, 5.0),
-    colormap: Union[str, Colormap, None] = None,
+    colormap: str | Colormap | None = None,
     show_colorbar: bool = True,
-    triangulation_color: Union[str, tuple[float, float, float], None] = None,
+    triangulation_color: str | tuple[float, float, float] | None = None,
     arrangement: Literal["horizontal", "vertical"] = "horizontal",
     share_value_axis: bool = False,
 ) -> plt.Figure:
@@ -306,6 +311,7 @@ def plot_2d_functions(
     for ax, (label, triangulation, function_values) in zip(
         np.atleast_1d(axes),
         labels_triangulations_and_function_values,
+        strict=True,
     ):
         if plot_type == "surface":
             artist = ax.plot_trisurf(
@@ -344,12 +350,10 @@ def plot_2d_functions(
 
 
 def define_dirichlet_boundary_condition(
-    boundary_value: Union[Function, Constant, float],
-    function_space: Optional[FunctionSpace] = None,
+    boundary_value: Function | Constant | float,
+    function_space: FunctionSpace | None = None,
     *,
-    boundary_indicator_function: Optional[
-        Callable[[ufl.SpatialCoordinate], bool]
-    ] = None,
+    boundary_indicator_function: Callable[[ufl.SpatialCoordinate], bool] | None = None,
 ) -> DirichletBC:
     """
     Define DOLFINx object representing Dirichlet boundary condition.
@@ -382,20 +386,21 @@ def define_dirichlet_boundary_condition(
         msg = "function_space must not be None if boundary_value is not a Function"
         raise ValueError(msg)
     mesh = function_space.mesh
+    facet_dim = mesh.topology.dim - 1
     if boundary_indicator_function is not None:
-        boundary_dofs = dolfinx.fem.locate_dofs_geometrical(
-            function_space,
+        boundary_facets = dolfinx.mesh.locate_entities_boundary(
+            mesh,
+            facet_dim,
             boundary_indicator_function,
         )
     else:
-        facet_dim = mesh.topology.dim - 1
         mesh.topology.create_connectivity(facet_dim, mesh.topology.dim)
         boundary_facets = dolfinx.mesh.exterior_facet_indices(mesh.topology)
-        boundary_dofs = dolfinx.fem.locate_dofs_topological(
-            function_space,
-            facet_dim,
-            boundary_facets,
-        )
+    boundary_dofs = dolfinx.fem.locate_dofs_topological(
+        function_space,
+        facet_dim,
+        boundary_facets,
+    )
     return dolfinx.fem.dirichletbc(
         boundary_value,
         boundary_dofs,
@@ -405,11 +410,11 @@ def define_dirichlet_boundary_condition(
 
 def error_norm(
     function_1: dolfinx.fem.Function,
-    function_or_expression_2: Union[
-        dolfinx.fem.Function,
-        ufl.core.expr.Expr,
-        Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr],
-    ],
+    function_or_expression_2: (
+        dolfinx.fem.Function
+        | ufl.core.expr.Expr
+        | Callable[[ufl.SpatialCoordinate], ufl.core.expr.Expr]
+    ),
     degree_raise: int = 3,
     norm_order: Literal[1, 2, "inf-dof"] = 2,
 ) -> float:
@@ -463,10 +468,13 @@ def error_norm(
         Computed Lᵖ error norm value.
     """
     # Create raised degree function space with same element as for original function_1
-    original_degree = function_1.function_space.ufl_element().degree()
-    family = function_1.function_space.ufl_element().family()
+    original_degree = function_1.function_space.ufl_element().degree
+    if callable(original_degree):
+        # Depending on Basix version degree may be an accesor method or attribute
+        original_degree = original_degree()
+    family = function_1.function_space.ufl_element().family_name
     mesh = function_1.function_space.mesh
-    raised_degree_function_space = FunctionSpace(
+    raised_degree_function_space = functionspace(
         mesh,
         (family, original_degree + degree_raise),
     )

@@ -64,7 +64,7 @@ Centre for Advanced Research Computing, University College London
 
 ### Prerequisites
 
-Compatible with Python 3.9 and 3.10.
+Compatible with Python 3.10 and above.
 [We recommend DOLFINx v0.7.0 or above to be installed](https://github.com/FEniCS/dolfinx#installation) although we support v0.6.0 for now.
 
 ### Installation
@@ -98,13 +98,13 @@ Tests can be run across all compatible Python versions in isolated environments 
 tox
 ```
 
-from the root of the repository, or to run tests with Python 3.9 specifically run
+from the root of the repository, or to run tests with Python 3.10 specifically run
 
 ```sh
-tox -e test-py39
+tox -e test-py310
 ```
 
-substituting `py39` for `py310` to run tests with Python 3.10.
+substituting `py310` for `py311` or `py312` to run tests with Python 3.11 or 3.12 respectively.
 
 To run tests manually in a Python environment with `pytest` installed run
 
