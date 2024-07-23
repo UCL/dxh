@@ -37,6 +37,7 @@ except ImportError:
     from dolfinx.geometry import compute_collisions as compute_collisions_points
 
 
+from matplotlib.colors import Normalize
 from matplotlib.tri import Triangulation
 from mpi4py import MPI
 
@@ -175,6 +176,7 @@ def plot_1d_functions(
     points: NDArray[np.float64] | None = None,
     axis_size: tuple[float, float] = (5.0, 5.0),
     arrangement: Literal["horizontal", "vertical", "stacked"] = "horizontal",
+    share_value_axis: bool = False,
 ) -> plt.Figure:
     """
     Plot one or more finite element functions on 1D domains using Matplotlib.
@@ -193,6 +195,8 @@ def plot_1d_functions(
             :py:const:`"stacked"` corresponding to respectively plotting functions on
             separate axes in a single row, plotting functions on separate axes in a
             single column or plotting functions all on a single axis.
+        share_value_axis: Whether to use a common vertical axis scale (representing
+            function value) across all subplots.
 
     Returns:
         Matplotlib figure object with plotted function(s).
@@ -211,7 +215,7 @@ def plot_1d_functions(
     else:
         msg = f"Value {arrangement} for arrangement invalid"
         raise ValueError(msg)
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize, sharey=share_value_axis)
     axes = np.atleast_1d(axes)
     for i, (label, function) in enumerate(label_and_functions):
         ax = axes[0] if arrangement == "stacked" else axes[i]
@@ -239,6 +243,7 @@ def plot_2d_functions(
     show_colorbar: bool = True,
     triangulation_color: str | tuple[float, float, float] | None = None,
     arrangement: Literal["horizontal", "vertical"] = "horizontal",
+    share_value_axis: bool = False,
 ) -> plt.Figure:
     """
     Plot one or more finite element functions on 2D domains using Matplotlib.
@@ -268,6 +273,8 @@ def plot_2d_functions(
             heatmap.
         arrangement: Whether to arrange multiple axes vertically in a single column
             rather than default of horizontally in a single row.
+        share_value_axis: Whether to use a common vertical axis scale and/or colormap
+            normalization (representing function value) across all subplots.
 
     Returns:
         Matplotlib figure object with plotted function(s).
@@ -284,34 +291,47 @@ def plot_2d_functions(
     else:
         msg = f"Value of arrangement argument {arrangement} is invalid"
         raise ValueError(msg)
-    subplot_kw = {"projection": "3d"} if plot_type == "surface" else {}
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize, subplot_kw=subplot_kw)
-    for ax, (label, function) in zip(
-        np.atleast_1d(axes),
-        label_and_functions,
-        strict=True,
-    ):
+    labels_triangulations_and_function_values = []
+    min_value, max_value = float("inf"), -float("inf")
+    for label, function in label_and_functions:
         mesh = function.function_space.mesh
         if mesh.topology.dim != 2:
             msg = "Only two-dimensional spatial domains are supported"
             raise ValueError(msg)
         triangulation = get_matplotlib_triangulation_from_mesh(mesh)
         function_values = evaluate_function_at_points(function, mesh.geometry.x)
+        min_value = min(min_value, function_values.min())
+        max_value = max(max_value, function_values.max())
+        labels_triangulations_and_function_values.append(
+            (label, triangulation, function_values),
+        )
+    subplot_kw = {"projection": "3d"} if plot_type == "surface" else {}
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize, subplot_kw=subplot_kw)
+    normalize = Normalize(vmin=min_value, vmax=max_value) if share_value_axis else None
+    for ax, (label, triangulation, function_values) in zip(
+        np.atleast_1d(axes),
+        labels_triangulations_and_function_values,
+        strict=True,
+    ):
         if plot_type == "surface":
             artist = ax.plot_trisurf(
                 triangulation,
                 function_values,
                 cmap=colormap,
+                norm=normalize,
                 shade=False,
                 edgecolor=triangulation_color,
                 linewidth=None if triangulation_color is None else 0.2,
             )
+            if share_value_axis:
+                ax.set_zlim(min_value, max_value)
         elif plot_type == "pcolor":
             artist = ax.tripcolor(
                 triangulation,
                 function_values,
                 shading="gouraud",
                 cmap=colormap,
+                norm=normalize,
             )
             if triangulation_color is not None:
                 ax.triplot(triangulation, color=triangulation_color, linewidth=1.0)
