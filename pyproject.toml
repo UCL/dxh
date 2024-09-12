@@ -168,6 +168,7 @@ conda_deps =
     docs: fenics-dolfinx
 conda_channels =
     conda-forge
+passenv = HOME
 
 [testenv:test-py{310,311,312}-dolfinx{06,07,08}]
 commands =
