@@ -342,6 +342,7 @@ document.write(`
     <span class="kn">from</span> <span class="nn">dolfinx.geometry</span> <span class="kn">import</span> <span class="n">compute_collisions</span> <span class="k">as</span> <span class="n">compute_collisions_points</span>
 
 
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">Normalize</span>
 <span class="kn">from</span> <span class="nn">matplotlib.tri</span> <span class="kn">import</span> <span class="n">Triangulation</span>
 <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
 
@@ -480,6 +481,7 @@ document.write(`
     <span class="n">points</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axis_size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
     <span class="n">arrangement</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="s2">&quot;stacked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+    <span class="n">share_value_axis</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot one or more finite element functions on 1D domains using Matplotlib.</span>
@@ -498,6 +500,8 @@ document.write(`
 <span class="sd">            :py:const:`&quot;stacked&quot;` corresponding to respectively plotting functions on</span>
 <span class="sd">            separate axes in a single row, plotting functions on separate axes in a</span>
 <span class="sd">            single column or plotting functions all on a single axis.</span>
+<span class="sd">        share_value_axis: Whether to use a common vertical axis scale (representing</span>
+<span class="sd">            function value) across all subplots.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Matplotlib figure object with plotted function(s).</span>
@@ -516,7 +520,7 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Value </span><span class="si">{</span><span class="n">arrangement</span><span class="si">}</span><span class="s2"> for arrangement invalid&quot;</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="n">share_value_axis</span><span class="p">)</span>
     <span class="n">axes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_and_functions</span><span class="p">):</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">arrangement</span> <span class="o">==</span> <span class="s2">&quot;stacked&quot;</span> <span class="k">else</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -544,6 +548,7 @@ document.write(`
     <span class="n">show_colorbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">triangulation_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">arrangement</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="s2">&quot;vertical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+    <span class="n">share_value_axis</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot one or more finite element functions on 2D domains using Matplotlib.</span>
@@ -573,6 +578,8 @@ document.write(`
 <span class="sd">            heatmap.</span>
 <span class="sd">        arrangement: Whether to arrange multiple axes vertically in a single column</span>
 <span class="sd">            rather than default of horizontally in a single row.</span>
+<span class="sd">        share_value_axis: Whether to use a common vertical axis scale and/or colormap</span>
+<span class="sd">            normalization (representing function value) across all subplots.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Matplotlib figure object with plotted function(s).</span>
@@ -589,34 +596,47 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Value of arrangement argument </span><span class="si">{</span><span class="n">arrangement</span><span class="si">}</span><span class="s2"> is invalid&quot;</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">subplot_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">}</span> <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span> <span class="k">else</span> <span class="p">{}</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="n">subplot_kw</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">axes</span><span class="p">),</span>
-        <span class="n">label_and_functions</span><span class="p">,</span>
-        <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="n">labels_triangulations_and_function_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">label_and_functions</span><span class="p">:</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">function_space</span><span class="o">.</span><span class="n">mesh</span>
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Only two-dimensional spatial domains are supported&quot;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">triangulation</span> <span class="o">=</span> <span class="n">get_matplotlib_triangulation_from_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
         <span class="n">function_values</span> <span class="o">=</span> <span class="n">evaluate_function_at_points</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">function_values</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">max_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_value</span><span class="p">,</span> <span class="n">function_values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">labels_triangulations_and_function_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">triangulation</span><span class="p">,</span> <span class="n">function_values</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="n">subplot_kw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">}</span> <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="n">subplot_kw</span><span class="p">)</span>
+    <span class="n">normalize</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">max_value</span><span class="p">)</span> <span class="k">if</span> <span class="n">share_value_axis</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">triangulation</span><span class="p">,</span> <span class="n">function_values</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">axes</span><span class="p">),</span>
+        <span class="n">labels_triangulations_and_function_values</span><span class="p">,</span>
+        <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span><span class="p">:</span>
             <span class="n">artist</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_trisurf</span><span class="p">(</span>
                 <span class="n">triangulation</span><span class="p">,</span>
                 <span class="n">function_values</span><span class="p">,</span>
                 <span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
                 <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">edgecolor</span><span class="o">=</span><span class="n">triangulation_color</span><span class="p">,</span>
                 <span class="n">linewidth</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">triangulation_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.2</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="k">if</span> <span class="n">share_value_axis</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;pcolor&quot;</span><span class="p">:</span>
             <span class="n">artist</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span>
                 <span class="n">triangulation</span><span class="p">,</span>
                 <span class="n">function_values</span><span class="p">,</span>
                 <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;gouraud&quot;</span><span class="p">,</span>
                 <span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">triangulation_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">triangulation</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">triangulation_color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
