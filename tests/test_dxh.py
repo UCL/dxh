@@ -1,6 +1,5 @@
 """Tests for DOLFINx helpers (dxh) module."""
 
-import basix
 import dolfinx
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,6 +22,20 @@ except ImportError:
     # Compatibility w dolfinx@0.6: if the new functionspace function is not in DOLFINx
     # then use the class constructor directly.
     from dolfinx.fem import FunctionSpace as functionspace  # noqa: N813
+
+
+try:
+    from basix.ufl import element as basix_element
+    from basix.ufl import mixed_element as basix_mixed_element
+except ImportError:
+    # Compatibility w dolfinx@0.6 / basix<0.7: try import from previous
+    # basix.ufl_wrapper submodule if basix.ufl not found
+    from basix.ufl_wrapper import (
+        MixedElement as basix_mixed_element,  # noqa: N813
+    )
+    from basix.ufl_wrapper import (
+        create_element as basix_element,
+    )
 
 
 def _create_unit_mesh(spatial_dimension, number_cells_per_axis, cell_type=None):
@@ -474,9 +487,12 @@ def test_define_dirichlet_boundary_conditions_on_mixed_space(
 ):
     mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
     elements = [
-        basix.ufl.element("Lagrange", mesh.basix_cell(), d) for d in element_degrees
+        # Compatibility w dolfinx@0.6: Use mesh.ufl_cell().cellname() rather
+        # than mesh.basix_cell()
+        basix_element("Lagrange", mesh.ufl_cell().cellname(), d)
+        for d in element_degrees
     ]
-    mixed_element = basix.ufl.mixed_element(elements)
+    mixed_element = basix_mixed_element(elements)
     mixed_function_space = functionspace(mesh, mixed_element)
     boundary_values = [0.0] * len(element_degrees)
     boundary_indicator_functions = [boundary_indicator_function] * len(element_degrees)
