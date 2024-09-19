@@ -24,6 +24,20 @@ except ImportError:
     from dolfinx.fem import FunctionSpace as functionspace  # noqa: N813
 
 
+try:
+    from basix.ufl import element as basix_element
+    from basix.ufl import mixed_element as basix_mixed_element
+except ImportError:
+    # Compatibility w dolfinx@0.6 / basix<0.7: try import from previous
+    # basix.ufl_wrapper submodule if basix.ufl not found
+    from basix.ufl_wrapper import (
+        MixedElement as basix_mixed_element,  # noqa: N813
+    )
+    from basix.ufl_wrapper import (
+        create_element as basix_element,
+    )
+
+
 def _create_unit_mesh(spatial_dimension, number_cells_per_axis, cell_type=None):
     if spatial_dimension == 1:
         return dolfinx.mesh.create_unit_interval(MPI.COMM_WORLD, number_cells_per_axis)
@@ -456,6 +470,42 @@ def test_define_dirichlet_boundary_condition_function_with_function_space():
     boundary_value = dolfinx.fem.Function(function_space)
     with pytest.raises(ValueError, match="function_space"):
         dxh.define_dirichlet_boundary_condition(boundary_value, function_space)
+
+
+@pytest.mark.parametrize("number_cells_per_axis", [3, 10])
+@pytest.mark.parametrize("spatial_dimension", [1, 2, 3])
+@pytest.mark.parametrize("element_degrees", [[1], [2, 3], [1, 2, 3]])
+@pytest.mark.parametrize(
+    "boundary_indicator_function",
+    [None, [None], [_unit_mesh_boundary_indicator_function]],
+)
+def test_define_dirichlet_boundary_conditions_on_mixed_space(
+    number_cells_per_axis,
+    spatial_dimension,
+    element_degrees,
+    boundary_indicator_function,
+):
+    mesh = _create_unit_mesh(spatial_dimension, number_cells_per_axis)
+    elements = [
+        # Compatibility w dolfinx@0.6: Use mesh.ufl_cell().cellname() rather
+        # than mesh.basix_cell()
+        basix_element("Lagrange", mesh.ufl_cell().cellname(), d)
+        for d in element_degrees
+    ]
+    mixed_element = basix_mixed_element(elements)
+    mixed_function_space = functionspace(mesh, mixed_element)
+    boundary_values = [0.0] * len(element_degrees)
+    boundary_indicator_functions = (
+        boundary_indicator_function
+        if boundary_indicator_function is None
+        else boundary_indicator_function * len(element_degrees)
+    )
+    boundary_conditions = dxh.define_dirichlet_boundary_conditions_on_mixed_space(
+        boundary_values,
+        mixed_function_space,
+        boundary_indicator_functions=boundary_indicator_functions,
+    )
+    assert all(isinstance(bc, DirichletBC) for bc in boundary_conditions)
 
 
 @pytest.mark.parametrize("number_cells_per_axis", [10, 30, 100])

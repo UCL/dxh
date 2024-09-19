@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Literal
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Literal, TypeAlias
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Sequence
+    from collections.abc import Iterable, Sequence
 
 import dolfinx
 import matplotlib.pyplot as plt
@@ -349,11 +350,15 @@ def plot_2d_functions(
     return fig
 
 
+BoundaryValue: TypeAlias = Function | Constant | float
+BoundaryIndicatorFunction: TypeAlias = Callable[[ufl.SpatialCoordinate], bool]
+
+
 def define_dirichlet_boundary_condition(
-    boundary_value: Function | Constant | float,
+    boundary_value: BoundaryValue,
     function_space: FunctionSpace | None = None,
     *,
-    boundary_indicator_function: Callable[[ufl.SpatialCoordinate], bool] | None = None,
+    boundary_indicator_function: BoundaryIndicatorFunction | None = None,
 ) -> DirichletBC:
     """
     Define DOLFINx object representing Dirichlet boundary condition.
@@ -406,6 +411,55 @@ def define_dirichlet_boundary_condition(
         boundary_dofs,
         function_space if not isinstance(boundary_value, Function) else None,
     )
+
+
+def define_dirichlet_boundary_conditions_on_mixed_space(
+    boundary_values: Iterable[BoundaryValue],
+    mixed_function_space: FunctionSpace,
+    *,
+    boundary_indicator_functions: (
+        Iterable[BoundaryIndicatorFunction | None] | None
+    ) = None,
+) -> list[DirichletBC]:
+    """
+    Define DOLFINx objects representing Dirichlet boundary conditions on a mixed space.
+
+    Args:
+        boundary_values: Fixed values to enforce at domain boundary, on per subspace of
+            the mixed function space, either as a single floating point (or
+            :py:class:`dolfinx.fem.Constant`) value or a finite element function object
+            which gives the required values when evaluated at the boundary degrees of
+            freedom.
+        mixed_function_space: Argument specifying mixed finite element function space.
+        boundary_indicator_functions: If specified, an iterable of functions evaluating
+            to :py:const:`True` when the passed spatial coordinate is on the boundary
+            and :py:const:`False` otherwise, one per function subspace. If equal to
+            :py:const:`None` (the default) then the boundaries are assumed to correspond
+            to all exterior facets for all subspaces. If an iterable is passed, any
+            :py:const:`None` entries correspond to assuming boundaries of all exterior
+            facets for the subspace with the corresponding index.
+
+    Returns:
+        List of Dirichlet boundary condition objects, ordered with same indices as used
+        to access function subspaces with `mixed_function_space.sub(index)`.
+    """
+    num_sub_spaces = mixed_function_space.num_sub_spaces
+    sub_function_spaces = [mixed_function_space.sub(i) for i in range(num_sub_spaces)]
+    if boundary_indicator_functions is None:
+        boundary_indicator_functions = [None] * num_sub_spaces
+    return [
+        define_dirichlet_boundary_condition(
+            boundary_value=boundary_value,
+            function_space=function_space,
+            boundary_indicator_function=boundary_indicator_function,
+        )
+        for boundary_value, function_space, boundary_indicator_function in zip(
+            boundary_values,
+            sub_function_spaces,
+            boundary_indicator_functions,
+            strict=True,
+        )
+    ]
 
 
 def error_norm(

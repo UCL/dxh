@@ -19,6 +19,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
+    "fenics-basix",
     "fenics-dolfinx>=0.6.0",
     "fenics-ufl",
     "matplotlib",
@@ -51,7 +52,9 @@ license.file = "LICENCE.md"
 urls.homepage = "https://github.com/UCL/dxh"
 
 [tool.coverage]
-report = {skip_covered = true, sort = "cover"}
+report = {exclude_lines = [
+    "if TYPE_CHECKING:",
+], skip_covered = true, sort = "cover"}
 run = {branch = true, parallel = true, relative_files = true, source = [
     "dxh",
 ]}
