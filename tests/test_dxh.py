@@ -477,7 +477,7 @@ def test_define_dirichlet_boundary_condition_function_with_function_space():
 @pytest.mark.parametrize("element_degrees", [[1], [2, 3], [1, 2, 3]])
 @pytest.mark.parametrize(
     "boundary_indicator_function",
-    [None, _unit_mesh_boundary_indicator_function],
+    [None, [None], [_unit_mesh_boundary_indicator_function]],
 )
 def test_define_dirichlet_boundary_conditions_on_mixed_space(
     number_cells_per_axis,
@@ -495,7 +495,11 @@ def test_define_dirichlet_boundary_conditions_on_mixed_space(
     mixed_element = basix_mixed_element(elements)
     mixed_function_space = functionspace(mesh, mixed_element)
     boundary_values = [0.0] * len(element_degrees)
-    boundary_indicator_functions = [boundary_indicator_function] * len(element_degrees)
+    boundary_indicator_functions = (
+        boundary_indicator_function
+        if boundary_indicator_function is None
+        else boundary_indicator_function * len(element_degrees)
+    )
     boundary_conditions = dxh.define_dirichlet_boundary_conditions_on_mixed_space(
         boundary_values,
         mixed_function_space,
